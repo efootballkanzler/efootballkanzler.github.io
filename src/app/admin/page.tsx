@@ -126,6 +126,10 @@ export default function AdminPage() {
   const [saved, setSaved] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
 
+  // --- Reset competition state ---
+  const [showResetAllConfirm, setShowResetAllConfirm] = useState(false);
+  const [resetAllStep, setResetAllStep] = useState(0);
+
   // --- Matches state ---
   const [matches, setMatches] = useState<(Match & { homeGoalScorers?: string; awayGoalScorers?: string })[]>([]);
   const [editingMatchId, setEditingMatchId] = useState<string | null>(null);
@@ -464,6 +468,19 @@ export default function AdminPage() {
 
   const anySaved = saved || matchSaved || fixtureSaved;
 
+  function handleResetAll() {
+    localStorage.removeItem('admin_teams');
+    localStorage.removeItem('admin_matches');
+    localStorage.removeItem('admin_fixtures');
+    setTeams(initialTeams);
+    setMatches(initialMatches);
+    setFixtures([]);
+    setShowResetAllConfirm(false);
+    setResetAllStep(0);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2500);
+  }
+
   // --- Dashboard stats ---
   const totalTeams = teams.length;
   const totalFixtures = fixtures.length;
@@ -474,6 +491,77 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#071428] text-foreground">
+      {/* Reset All Confirmation Modal */}
+      {showResetAllConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-4">
+          <div className="bg-[#0D2137] border border-red-500/40 rounded-2xl p-7 w-full max-w-md shadow-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-red-500/15 flex items-center justify-center flex-shrink-0">
+                <svg className="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-black text-white">Reset Kompetisi</h2>
+                <p className="text-xs text-muted-foreground">Tindakan ini tidak dapat dibatalkan</p>
+              </div>
+            </div>
+
+            {resetAllStep === 0 && (
+              <>
+                <p className="text-sm text-gray-300 mb-2">
+                  Ini akan menghapus <strong className="text-white">semua data kompetisi</strong>:
+                </p>
+                <ul className="text-sm text-gray-400 space-y-1 mb-5 ml-4 list-disc">
+                  <li>Semua data tim (dikembalikan ke data awal)</li>
+                  <li>Semua skor & hasil pertandingan (direset)</li>
+                  <li>Semua fixture yang dibuat (dihapus)</li>
+                </ul>
+                <p className="text-sm text-red-400 font-semibold mb-5">
+                  Apakah Anda yakin ingin memulai kompetisi dari awal?
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setShowResetAllConfirm(false); setResetAllStep(0); }}
+                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={() => setResetAllStep(1)}
+                    className="flex-1 bg-red-600/20 hover:bg-red-600/30 text-red-400 font-semibold py-2.5 rounded-xl border border-red-500/40 transition-colors text-sm"
+                  >
+                    Lanjutkan →
+                  </button>
+                </div>
+              </>
+            )}
+
+            {resetAllStep === 1 && (
+              <>
+                <p className="text-sm text-gray-300 mb-5">
+                  Konfirmasi terakhir: ketuk <strong className="text-red-400">"Reset Sekarang"</strong> untuk menghapus semua data dan memulai kompetisi baru.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { setShowResetAllConfirm(false); setResetAllStep(0); }}
+                    className="flex-1 bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    onClick={handleResetAll}
+                    className="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2.5 rounded-xl transition-colors text-sm"
+                  >
+                    🗑 Reset Sekarang
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Top Bar */}
       <div className="bg-[#0D2137] border-b border-border/40 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -507,6 +595,12 @@ export default function AdminPage() {
               Reset Skor
             </button>
           )}
+          <button
+            onClick={() => { setShowResetAllConfirm(true); setResetAllStep(0); }}
+            className="text-xs text-red-400 hover:text-red-300 border border-red-500/40 hover:border-red-400 bg-red-500/5 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all font-semibold"
+          >
+            ⚠ Reset Kompetisi
+          </button>
           <button
             onClick={handleLogout}
             className="text-xs text-red-400 hover:text-red-300 border border-red-400/40 hover:border-red-400 px-3 py-1.5 rounded-lg transition-all"
