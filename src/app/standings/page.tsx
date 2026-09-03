@@ -2,7 +2,6 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GroupTable from '@/app/standings/components/GroupTable';
-import TeamProfilesGrid from '@/app/standings/components/TeamProfilesGrid';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -36,17 +35,7 @@ export default function StandingsPage() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-12 gap-8">
-            {/* Main: Group Tables */}
-            <div className="lg:col-span-8">
-              <GroupTable />
-            </div>
-
-            {/* Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
-              <TeamProfilesGrid />
-            </div>
-          </div>
+          <GroupTable />
         </div>
       </main>
       <Footer />
