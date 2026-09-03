@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+
 import { teams as initialTeams, matches as initialMatches, Team, Match } from '@/data/leagueData';
 
 const GROUPS = ['A', 'B', 'C', 'D'];
@@ -115,7 +115,7 @@ const STAGE_OPTIONS = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'teams' | 'matches' | 'fixtures'>('teams');
+  const [activeTab, setActiveTab] = useState<'teams' | 'matches' | 'fixtures' | 'config'>('teams');
 
   // --- Teams state ---
   const [teams, setTeams] = useState<Team[]>([]);
@@ -145,6 +145,85 @@ export default function AdminPage() {
   const [fixtureForm, setFixtureForm] = useState<FixtureFormData>(emptyFixtureForm('A'));
   const [fixtureSaved, setFixtureSaved] = useState(false);
   const [deleteFixtureConfirm, setDeleteFixtureConfirm] = useState<string | null>(null);
+
+  // --- League Config state ---
+  interface LeagueConfig {
+    leagueName: string;
+    season: string;
+    organizer: string;
+    description: string;
+    // Tournament rules
+    pointsWin: string;
+    pointsDraw: string;
+    pointsLoss: string;
+    teamsAdvancePerGroup: string;
+    tiebreaker: string;
+    // Group structure
+    numberOfGroups: string;
+    teamsPerGroup: string;
+    groupNames: string;
+    // Match regulations
+    matchDuration: string;
+    extraTime: string;
+    penaltyShootout: string;
+    maxSubstitutions: string;
+    venue: string;
+    additionalRules: string;
+  }
+
+  const defaultConfig: LeagueConfig = {
+    leagueName: 'Kanzler eFootball League',
+    season: '2026',
+    organizer: 'Kanzler Organization',
+    description: 'Kompetisi eFootball bergengsi yang mempertemukan tim-tim terbaik.',
+    pointsWin: '3',
+    pointsDraw: '1',
+    pointsLoss: '0',
+    teamsAdvancePerGroup: '2',
+    tiebreaker: 'Selisih gol, gol terbanyak, head-to-head',
+    numberOfGroups: '4',
+    teamsPerGroup: '4',
+    groupNames: 'A, B, C, D',
+    matchDuration: '90',
+    extraTime: 'Ya (2x15 menit)',
+    penaltyShootout: 'Ya (jika imbang setelah extra time)',
+    maxSubstitutions: '5',
+    venue: 'Virtual Stadium',
+    additionalRules: '',
+  };
+
+  const [leagueConfig, setLeagueConfig] = useState<LeagueConfig>(defaultConfig);
+  const [configSaved, setConfigSaved] = useState(false);
+  const [configDirty, setConfigDirty] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('admin_league_config');
+    if (stored) {
+      try { setLeagueConfig({ ...defaultConfig, ...JSON.parse(stored) }); } catch { /* ignore */ }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleConfigChange(field: keyof LeagueConfig, value: string) {
+    setLeagueConfig(prev => ({ ...prev, [field]: value }));
+    setConfigDirty(true);
+  }
+
+  function handleConfigSave(e: React.FormEvent) {
+    e.preventDefault();
+    localStorage.setItem('admin_league_config', JSON.stringify(leagueConfig));
+    setConfigSaved(true);
+    setConfigDirty(false);
+    setTimeout(() => setConfigSaved(false), 2500);
+  }
+
+  function handleConfigReset() {
+    setLeagueConfig(defaultConfig);
+    localStorage.removeItem('admin_league_config');
+    setConfigDirty(false);
+    setConfigSaved(true);
+    setTimeout(() => setConfigSaved(false), 2500);
+  }
 
   // --- Login state ---
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -563,54 +642,77 @@ export default function AdminPage() {
       )}
 
       {/* Top Bar */}
-      <div className="bg-[#0D2137] border-b border-border/40 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Link href="/" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium">
-            ← Kembali
-          </Link>
-          <span className="text-border/60">|</span>
-          <h1 className="text-lg font-black uppercase tracking-widest text-foreground">
-            Admin <span className="text-accent">Panel</span>
-          </h1>
-        </div>
-        <div className="flex items-center gap-3">
-          {anySaved && (
-            <span className="text-xs font-bold text-green-400 bg-green-400/10 px-3 py-1 rounded-full border border-green-400/30">
-              ✓ Tersimpan
-            </span>
-          )}
-          {activeTab === 'teams' && (
+      <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6 py-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl font-bold text-white">Admin Panel</h1>
+            <p className="text-gray-400 text-xs mt-0.5">Kelola data liga & kompetisi</p>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            {(anySaved || configSaved) && (
+              <span className="text-green-400 text-xs font-medium flex items-center gap-1">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+                Tersimpan
+              </span>
+            )}
+            {activeTab === 'teams' && (
+              <button
+                onClick={handleReset}
+                className="text-xs text-muted-foreground hover:text-foreground border border-border/40 hover:border-border px-3 py-1.5 rounded-lg transition-all"
+              >
+                Reset Tim
+              </button>
+            )}
+            {activeTab === 'matches' && (
+              <button
+                onClick={handleResetMatches}
+                className="text-xs text-muted-foreground hover:text-foreground border border-border/40 hover:border-border px-3 py-1.5 rounded-lg transition-all"
+              >
+                Reset Skor
+              </button>
+            )}
             <button
-              onClick={handleReset}
-              className="text-xs text-muted-foreground hover:text-foreground border border-border/40 hover:border-border px-3 py-1.5 rounded-lg transition-all"
+              onClick={() => { setShowResetAllConfirm(true); setResetAllStep(0); }}
+              className="text-xs text-red-400 hover:text-red-300 border border-red-500/40 hover:border-red-400 bg-red-500/5 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all font-semibold"
             >
-              Reset Tim
+              ⚠ Reset Kompetisi
             </button>
-          )}
-          {activeTab === 'matches' && (
             <button
-              onClick={handleResetMatches}
-              className="text-xs text-muted-foreground hover:text-foreground border border-border/40 hover:border-border px-3 py-1.5 rounded-lg transition-all"
+              onClick={handleLogout}
+              className="text-xs text-red-400 hover:text-red-300 border border-red-400/40 hover:border-red-400 px-3 py-1.5 rounded-lg transition-all"
             >
-              Reset Skor
+              Keluar
             </button>
-          )}
-          <button
-            onClick={() => { setShowResetAllConfirm(true); setResetAllStep(0); }}
-            className="text-xs text-red-400 hover:text-red-300 border border-red-500/40 hover:border-red-400 bg-red-500/5 hover:bg-red-500/10 px-3 py-1.5 rounded-lg transition-all font-semibold"
-          >
-            ⚠ Reset Kompetisi
-          </button>
-          <button
-            onClick={handleLogout}
-            className="text-xs text-red-400 hover:text-red-300 border border-red-400/40 hover:border-red-400 px-3 py-1.5 rounded-lg transition-all"
-          >
-            Keluar
-          </button>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      {/* Tabs */}
+      <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto flex gap-1 overflow-x-auto">
+          {([
+            { key: 'teams', label: 'Manajemen Tim' },
+            { key: 'fixtures', label: 'Fixture' },
+            { key: 'matches', label: 'Skor Pertandingan' },
+            { key: 'config', label: 'Konfigurasi Liga' },
+          ] as { key: typeof activeTab; label: string }[]).map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                activeTab === tab.key
+                  ? 'border-blue-500 text-blue-400' :'border-transparent text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         {/* Dashboard Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {/* Total Tim */}
@@ -704,34 +806,6 @@ export default function AdminPage() {
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Tab Navigation */}
-        <div className="flex gap-2 mb-6 flex-wrap">
-          <button
-            onClick={() => setActiveTab('teams')}
-            className={`px-6 py-2.5 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
-              activeTab === 'teams' ? 'bg-accent text-accent-foreground' : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
-            }`}
-          >
-            Manajemen Tim
-          </button>
-          <button
-            onClick={() => setActiveTab('matches')}
-            className={`px-6 py-2.5 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
-              activeTab === 'matches' ? 'bg-accent text-accent-foreground' : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
-            }`}
-          >
-            Skor Pertandingan
-          </button>
-          <button
-            onClick={() => setActiveTab('fixtures')}
-            className={`px-6 py-2.5 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
-              activeTab === 'fixtures' ? 'bg-accent text-accent-foreground' : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
-            }`}
-          >
-            Fixture Mendatang
-          </button>
         </div>
 
         {/* ===== TEAMS TAB ===== */}
@@ -1478,6 +1552,339 @@ export default function AdminPage() {
               </div>
             )}
           </>
+        )}
+
+        {/* ===== CONFIG TAB ===== */}
+        {activeTab === 'config' && (
+          <form onSubmit={handleConfigSave} className="space-y-6">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-white">Konfigurasi Liga</h2>
+                <p className="text-gray-400 text-sm mt-0.5">Atur nama liga, peraturan turnamen, struktur grup, dan regulasi pertandingan</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {configDirty && (
+                  <span className="text-yellow-400 text-xs font-medium">Belum disimpan</span>
+                )}
+                <button
+                  type="button"
+                  onClick={handleConfigReset}
+                  className="px-3 py-1.5 text-xs font-medium text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 rounded-lg transition-colors"
+                >
+                  Reset Default
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+                >
+                  Simpan Konfigurasi
+                </button>
+              </div>
+            </div>
+
+            {/* Section 1: Informasi Liga */}
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21l1.9-5.7a8.5 8.5 0 113.8 3.8z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-white">Informasi Liga</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Nama Liga <span className="text-red-400">*</span></label>
+                  <input
+                    type="text"
+                    value={leagueConfig.leagueName}
+                    onChange={e => handleConfigChange('leagueName', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Nama liga"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Musim / Season</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.season}
+                    onChange={e => handleConfigChange('season', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="2026"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Penyelenggara</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.organizer}
+                    onChange={e => handleConfigChange('organizer', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Nama penyelenggara"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Deskripsi Singkat</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.description}
+                    onChange={e => handleConfigChange('description', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Deskripsi kompetisi"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 2: Peraturan Turnamen */}
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded-lg bg-yellow-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-white">Peraturan Turnamen</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Poin Menang</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={leagueConfig.pointsWin}
+                    onChange={e => handleConfigChange('pointsWin', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Poin Seri</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={leagueConfig.pointsDraw}
+                    onChange={e => handleConfigChange('pointsDraw', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Poin Kalah</label>
+                  <input
+                    type="number"
+                    min="0"
+                    max="10"
+                    value={leagueConfig.pointsLoss}
+                    onChange={e => handleConfigChange('pointsLoss', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Tim Lolos per Grup</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="8"
+                    value={leagueConfig.teamsAdvancePerGroup}
+                    onChange={e => handleConfigChange('teamsAdvancePerGroup', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Aturan Tiebreaker</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.tiebreaker}
+                    onChange={e => handleConfigChange('tiebreaker', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Contoh: Selisih gol, gol terbanyak, head-to-head"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section 3: Struktur Grup */}
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-white">Struktur Grup</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Jumlah Grup</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="16"
+                    value={leagueConfig.numberOfGroups}
+                    onChange={e => handleConfigChange('numberOfGroups', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Tim per Grup</label>
+                  <input
+                    type="number"
+                    min="2"
+                    max="16"
+                    value={leagueConfig.teamsPerGroup}
+                    onChange={e => handleConfigChange('teamsPerGroup', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Nama Grup (pisah koma)</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.groupNames}
+                    onChange={e => handleConfigChange('groupNames', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="A, B, C, D"
+                  />
+                </div>
+              </div>
+              {/* Group preview */}
+              {leagueConfig.groupNames && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {leagueConfig.groupNames.split(',').map(g => g.trim()).filter(Boolean).map(g => (
+                    <span key={g} className="px-3 py-1 bg-green-500/10 border border-green-500/30 text-green-400 text-xs font-semibold rounded-full">
+                      Grup {g}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Section 4: Regulasi Pertandingan */}
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                  <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-white">Regulasi Pertandingan</h3>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Durasi Pertandingan (menit)</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="120"
+                    value={leagueConfig.matchDuration}
+                    onChange={e => handleConfigChange('matchDuration', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Maks. Pergantian Pemain</label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="11"
+                    value={leagueConfig.maxSubstitutions}
+                    onChange={e => handleConfigChange('maxSubstitutions', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Extra Time</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.extraTime}
+                    onChange={e => handleConfigChange('extraTime', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Contoh: Ya (2x15 menit)"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Adu Penalti</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.penaltyShootout}
+                    onChange={e => handleConfigChange('penaltyShootout', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Contoh: Ya (jika imbang setelah extra time)"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Venue Default</label>
+                  <input
+                    type="text"
+                    value={leagueConfig.venue}
+                    onChange={e => handleConfigChange('venue', e.target.value)}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                    placeholder="Nama stadion / venue"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Peraturan Tambahan</label>
+                  <textarea
+                    value={leagueConfig.additionalRules}
+                    onChange={e => handleConfigChange('additionalRules', e.target.value)}
+                    rows={3}
+                    className="w-full bg-[#071428] border border-gray-600 rounded-lg px-3 py-2 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-blue-500 resize-none"
+                    placeholder="Aturan khusus lainnya..."
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Summary Card */}
+            <div className="bg-[#0D2137] border border-blue-500/20 rounded-xl p-5">
+              <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Ringkasan Konfigurasi Aktif
+              </h3>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[
+                  { label: 'Nama Liga', value: leagueConfig.leagueName },
+                  { label: 'Musim', value: leagueConfig.season },
+                  { label: 'Jumlah Grup', value: leagueConfig.numberOfGroups },
+                  { label: 'Tim per Grup', value: leagueConfig.teamsPerGroup },
+                  { label: 'Poin Menang', value: leagueConfig.pointsWin },
+                  { label: 'Tim Lolos', value: `${leagueConfig.teamsAdvancePerGroup} per grup` },
+                  { label: 'Durasi Match', value: `${leagueConfig.matchDuration} menit` },
+                  { label: 'Maks. Subs', value: leagueConfig.maxSubstitutions },
+                ].map(item => (
+                  <div key={item.label} className="bg-[#071428] rounded-lg p-3">
+                    <p className="text-gray-500 text-xs mb-0.5">{item.label}</p>
+                    <p className="text-white text-sm font-semibold truncate">{item.value || '—'}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Save button bottom */}
+            <div className="flex justify-end gap-3 pb-4">
+              <button
+                type="button"
+                onClick={handleConfigReset}
+                className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 rounded-lg transition-colors"
+              >
+                Reset ke Default
+              </button>
+              <button
+                type="submit"
+                className="px-6 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                Simpan Konfigurasi
+              </button>
+            </div>
+          </form>
         )}
       </div>
     </div>
