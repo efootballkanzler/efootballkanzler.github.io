@@ -29,7 +29,7 @@ const AppImage = memo(function AppImage({
     height,
     className = '',
     priority = false,
-    quality = 60,
+    quality = 85,
     placeholder = 'empty',
     blurDataURL,
     fill = false,
