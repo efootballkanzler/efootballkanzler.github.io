@@ -50,7 +50,7 @@ export interface Match {
 export const teams: Team[] = [
   // Group A
   {
-    id: 'persija', name: 'Persija Jakarta', shortName: 'PJK', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop&crop=center',
+    id: 'persija', name: 'Player 1', shortName: 'P1', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop&crop=center',
     city: 'Jakarta', group: 'A', colors: { primary: '#E8282B', secondary: '#FFFFFF' },
     players: [
       { id: 'p1', name: 'Reza Firmansyah', number: 1, position: 'GK', age: 28, goals: 0, assists: 0, photo: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=200&h=200&fit=crop' },
@@ -60,7 +60,7 @@ export const teams: Team[] = [
     ]
   },
   {
-    id: 'persib', name: 'Persib Bandung', shortName: 'PBD', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'persib', name: 'Player 2', shortName: 'P2', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Bandung', group: 'A', colors: { primary: '#0066CC', secondary: '#FFFFFF' },
     players: [
       { id: 'p5', name: 'Dedi Kusuma', number: 1, position: 'GK', age: 30, goals: 0, assists: 0, photo: 'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?w=200&h=200&fit=crop' },
@@ -69,14 +69,14 @@ export const teams: Team[] = [
     ]
   },
   {
-    id: 'persis', name: 'Persis Solo', shortName: 'PSO', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'persis', name: 'Player 3', shortName: 'P3', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Solo', group: 'A', colors: { primary: '#CC0000', secondary: '#000000' },
     players: [
       { id: 'p8', name: 'Galih Pratama', number: 9, position: 'ST', age: 27, goals: 6, assists: 1, photo: 'https://images.pexels.com/photos/775358/pexels-photo-775358.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'psis', name: 'PSIS Semarang', shortName: 'PSM', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'psis', name: 'Player 4', shortName: 'P4', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Semarang', group: 'A', colors: { primary: '#0055AA', secondary: '#FFFFFF' },
     players: [
       { id: 'p9', name: 'Taufik Hidayat', number: 8, position: 'CM', age: 26, goals: 3, assists: 5, photo: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?w=200&h=200&fit=crop' },
@@ -84,28 +84,28 @@ export const teams: Team[] = [
   },
   // Group B
   {
-    id: 'arema', name: 'Arema FC', shortName: 'ARM', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'arema', name: 'Player 5', shortName: 'P5', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Malang', group: 'B', colors: { primary: '#003366', secondary: '#FFFFFF' },
     players: [
       { id: 'p10', name: 'Rizky Pratama', number: 10, position: 'CAM', age: 24, goals: 10, assists: 5, photo: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'persebaya', name: 'Persebaya Surabaya', shortName: 'PSB', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'persebaya', name: 'Player 6', shortName: 'P6', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Surabaya', group: 'B', colors: { primary: '#009900', secondary: '#FFFFFF' },
     players: [
       { id: 'p11', name: 'Irfan Maulana', number: 7, position: 'RW', age: 23, goals: 8, assists: 4, photo: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'psbk', name: 'PSBK Blitar', shortName: 'BLT', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'psbk', name: 'Player 7', shortName: 'P7', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Blitar', group: 'B', colors: { primary: '#CC6600', secondary: '#FFFFFF' },
     players: [
       { id: 'p12', name: 'Dani Setiawan', number: 11, position: 'LW', age: 25, goals: 4, assists: 2, photo: 'https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'psim', name: 'PSIM Yogyakarta', shortName: 'PSY', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'psim', name: 'Player 8', shortName: 'P8', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Yogyakarta', group: 'B', colors: { primary: '#990000', secondary: '#FFCC00' },
     players: [
       { id: 'p13', name: 'Bagas Nugroho', number: 6, position: 'CM', age: 22, goals: 2, assists: 3, photo: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=200&h=200&fit=crop' },
@@ -113,28 +113,28 @@ export const teams: Team[] = [
   },
   // Group C
   {
-    id: 'psm', name: 'PSM Makassar', shortName: 'PSM', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'psm', name: 'Player 9', shortName: 'P9', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Makassar', group: 'C', colors: { primary: '#CC0000', secondary: '#FFFFFF' },
     players: [
       { id: 'p14', name: 'Hendra Wijaya', number: 9, position: 'ST', age: 27, goals: 11, assists: 2, photo: 'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'persipura', name: 'Persipura Jayapura', shortName: 'PPJ', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'persipura', name: 'Player 10', shortName: 'P10', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Jayapura', group: 'C', colors: { primary: '#000000', secondary: '#FFCC00' },
     players: [
       { id: 'p15', name: 'Yohanes Rumbiak', number: 10, position: 'CAM', age: 24, goals: 7, assists: 6, photo: 'https://images.pexels.com/photos/1300402/pexels-photo-1300402.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'sriwijaya', name: 'Sriwijaya FC', shortName: 'SWJ', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'sriwijaya', name: 'Player 11', shortName: 'P11', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Palembang', group: 'C', colors: { primary: '#CC0000', secondary: '#FFCC00' },
     players: [
       { id: 'p16', name: 'Ahmad Fauzi', number: 8, position: 'CM', age: 26, goals: 4, assists: 3, photo: 'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'borneo', name: 'Borneo FC', shortName: 'BFC', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'borneo', name: 'Player 12', shortName: 'P12', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Samarinda', group: 'C', colors: { primary: '#FF6600', secondary: '#000000' },
     players: [
       { id: 'p17', name: 'Kevin Sitorus', number: 7, position: 'RW', age: 23, goals: 5, assists: 4, photo: 'https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?w=200&h=200&fit=crop' },
@@ -142,28 +142,28 @@ export const teams: Team[] = [
   },
   // Group D
   {
-    id: 'bali', name: 'Bali United', shortName: 'BLU', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'bali', name: 'Player 13', shortName: 'P13', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Bali', group: 'D', colors: { primary: '#FF0000', secondary: '#FFCC00' },
     players: [
       { id: 'p18', name: 'Made Suardana', number: 10, position: 'CAM', age: 25, goals: 9, assists: 7, photo: 'https://images.pexels.com/photos/775358/pexels-photo-775358.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'madura', name: 'Madura United', shortName: 'MDR', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'madura', name: 'Player 14', shortName: 'P14', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Pamekasan', group: 'D', colors: { primary: '#CC0000', secondary: '#FFFFFF' },
     players: [
       { id: 'p19', name: 'Syamsul Bahri', number: 9, position: 'ST', age: 28, goals: 8, assists: 1, photo: 'https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'persela', name: 'Persela Lamongan', shortName: 'PLM', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'persela', name: 'Player 15', shortName: 'P15', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Lamongan', group: 'D', colors: { primary: '#003399', secondary: '#FFFFFF' },
     players: [
       { id: 'p20', name: 'Eko Prasetyo', number: 11, position: 'LW', age: 24, goals: 5, assists: 3, photo: 'https://images.pexels.com/photos/1043474/pexels-photo-1043474.jpeg?w=200&h=200&fit=crop' },
     ]
   },
   {
-    id: 'pss', name: 'PSS Sleman', shortName: 'PSS', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
+    id: 'pss', name: 'Player 16', shortName: 'P16', logo: 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop',
     city: 'Sleman', group: 'D', colors: { primary: '#009900', secondary: '#FFFFFF' },
     players: [
       { id: 'p21', name: 'Nur Hidayat', number: 8, position: 'CM', age: 26, goals: 3, assists: 5, photo: 'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?w=200&h=200&fit=crop' },
@@ -222,12 +222,12 @@ export const matches: Match[] = [
 ];
 
 export const topScorers = [
-  { playerId: 'p14', playerName: 'Hendra Wijaya', teamId: 'psm', teamName: 'PSM Makassar', goals: 11 },
-  { playerId: 'p10', playerName: 'Rizky Pratama', teamId: 'arema', teamName: 'Arema FC', goals: 10 },
-  { playerId: 'p4', playerName: 'Wahyu Gunawan', teamId: 'persija', teamName: 'Persija Jakarta', goals: 9 },
-  { playerId: 'p18', playerName: 'Made Suardana', teamId: 'bali', teamName: 'Bali United', goals: 9 },
-  { playerId: 'p7', playerName: 'Fajri Santoso', teamId: 'persib', teamName: 'Persib Bandung', goals: 8 },
-  { playerId: 'p11', playerName: 'Irfan Maulana', teamId: 'persebaya', teamName: 'Persebaya Surabaya', goals: 8 },
+  { playerId: 'p14', playerName: 'Hendra Wijaya', teamId: 'psm', teamName: 'Player 9', goals: 11 },
+  { playerId: 'p10', playerName: 'Rizky Pratama', teamId: 'arema', teamName: 'Player 5', goals: 10 },
+  { playerId: 'p4', playerName: 'Wahyu Gunawan', teamId: 'persija', teamName: 'Player 1', goals: 9 },
+  { playerId: 'p18', playerName: 'Made Suardana', teamId: 'bali', teamName: 'Player 13', goals: 9 },
+  { playerId: 'p7', playerName: 'Fajri Santoso', teamId: 'persib', teamName: 'Player 2', goals: 8 },
+  { playerId: 'p11', playerName: 'Irfan Maulana', teamId: 'persebaya', teamName: 'Player 6', goals: 8 },
 ];
 
 export function getTeamById(id: string): Team | undefined {
