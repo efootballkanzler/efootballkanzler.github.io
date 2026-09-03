@@ -2,6 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
 
+// Tiny 10x6 dark blurred placeholder (base64 JPEG) — avoids layout shift and speeds up LCP perception
+const HERO_BLUR_DATA_URL =
+  'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAGAAoDASIAAhEBAxEB/8QAFgABAQEAAAAAAAAAAAAAAAAABgUEB//EAB8QAAICAQUBAAAAAAAAAAAAAAECAwQFERIhMf/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCw1uu3VNdFNUMUMKqFVQMADwBXqAAf/9k=';
+
 export default function HeroSection() {
   return (
     <section className="relative min-h-screen flex items-end pb-20 overflow-hidden noise-overlay">
@@ -12,6 +16,9 @@ export default function HeroSection() {
           alt="Football stadium at night with floodlights illuminating the green pitch, dark atmospheric stands, dramatic shadows"
           fill
           priority
+          quality={60}
+          placeholder="blur"
+          blurDataURL={HERO_BLUR_DATA_URL}
           className="object-cover"
           sizes="100vw" />
         
