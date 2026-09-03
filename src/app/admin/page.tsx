@@ -1,7 +1,11 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import {
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  LineChart, Line, Legend,
+} from 'recharts';
 
-import { teams as initialTeams, matches as initialMatches, Team, Match } from '@/data/leagueData';
+import { teams as initialTeams, matches as initialMatches, standings as initialStandings, Team, Match } from '@/data/leagueData';
 
 const GROUPS = ['A', 'B', 'C', 'D'];
 
@@ -117,7 +121,7 @@ const STAGE_OPTIONS = [
 ];
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState<'teams' | 'matches' | 'fixtures' | 'config'>('teams');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'teams' | 'matches' | 'fixtures' | 'config'>('dashboard');
 
   // --- Teams state ---
   const [teams, setTeams] = useState<Team[]>([]);
@@ -580,6 +584,61 @@ export default function AdminPage() {
     m => m.status === 'completed' || m.status === 'live'
   ).length;
 
+  // --- Dashboard chart data ---
+  const completedMatches = matches.filter(m => m.homeScore !== null && m.awayScore !== null);
+  const totalGoals = completedMatches.reduce((sum, m) => sum + (m.homeScore ?? 0) + (m.awayScore ?? 0), 0);
+  const avgGoalsPerMatch = completedMatches.length > 0 ? (totalGoals / completedMatches.length).toFixed(2) : '0.00';
+
+  // Most active group by goals
+  const goalsByGroup: Record<string, number> = {};
+  completedMatches.forEach(m => {
+    const grp = m.group || 'KO';
+    goalsByGroup[grp] = (goalsByGroup[grp] || 0) + (m.homeScore ?? 0) + (m.awayScore ?? 0);
+  });
+  const mostActiveGroup = Object.entries(goalsByGroup).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
+  const mostActiveGroupGoals = Object.entries(goalsByGroup).sort((a, b) => b[1] - a[1])[0]?.[1] || 0;
+
+  // Win/loss distribution per team (top 8 by played)
+  const allStandingsFlat = Object.values(initialStandings).flat();
+  const winLossData = allStandingsFlat
+    .sort((a, b) => b.played - a.played)
+    .slice(0, 8)
+    .map(s => {
+      const team = teams.find(t => t.id === s.teamId) || initialTeams.find(t => t.id === s.teamId);
+      return {
+        name: team?.shortName || s.teamId,
+        Menang: s.won,
+        Seri: s.drawn,
+        Kalah: s.lost,
+      };
+    });
+
+  // Team strength ranking by points (top 8)
+  const strengthData = allStandingsFlat
+    .sort((a, b) => b.points - a.points || b.gd - a.gd)
+    .slice(0, 8)
+    .map(s => {
+      const team = teams.find(t => t.id === s.teamId) || initialTeams.find(t => t.id === s.teamId);
+      return {
+        name: team?.shortName || s.teamId,
+        Poin: s.points,
+        GolDicetak: s.gf,
+      };
+    })
+    .reverse();
+
+  // Goal trends by match day (group stage only)
+  const matchDayGoals: Record<number, number> = {};
+  completedMatches
+    .filter(m => m.stage === 'group')
+    .forEach(m => {
+      const day = m.matchDay;
+      matchDayGoals[day] = (matchDayGoals[day] || 0) + (m.homeScore ?? 0) + (m.awayScore ?? 0);
+    });
+  const goalTrendData = Object.entries(matchDayGoals)
+    .sort((a, b) => Number(a[0]) - Number(b[0]))
+    .map(([day, goals]) => ({ name: `MD ${day}`, Gol: goals }));
+
   return (
     <div className="min-h-screen bg-[#071428] text-foreground">
       {/* Reset All Confirmation Modal */}
@@ -705,6 +764,7 @@ export default function AdminPage() {
       <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto flex gap-1 overflow-x-auto">
           {([
+            { key: 'dashboard', label: 'Dashboard' },
             { key: 'teams', label: 'Manajemen Tim' },
             { key: 'fixtures', label: 'Fixture' },
             { key: 'matches', label: 'Skor Pertandingan' },
@@ -819,6 +879,146 @@ export default function AdminPage() {
             </div>
           </div>
         </div>
+
+        {/* ===== DASHBOARD TAB ===== */}
+        {activeTab === 'dashboard' && (
+          <div className="space-y-8">
+            {/* KPI Cards */}
+            <div>
+              <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-widest mb-4">Indikator Kinerja Utama</h2>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* Total Pertandingan Selesai */}
+                <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-5">
+                  <div className="w-10 h-10 rounded-xl bg-green-500/15 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="text-3xl font-black text-white tabular-nums">{completedMatches.length}</div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Pertandingan Selesai</div>
+                </div>
+
+                {/* Total Gol */}
+                <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-5">
+                  <div className="w-10 h-10 rounded-xl bg-yellow-500/15 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div className="text-3xl font-black text-white tabular-nums">{totalGoals}</div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Total Gol</div>
+                </div>
+
+                {/* Rata-rata Gol per Pertandingan */}
+                <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-5">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/15 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <div className="text-3xl font-black text-white tabular-nums">{avgGoalsPerMatch}</div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Rata-rata Gol/Match</div>
+                </div>
+
+                {/* Grup Paling Aktif */}
+                <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-5">
+                  <div className="w-10 h-10 rounded-xl bg-purple-500/15 flex items-center justify-center mb-3">
+                    <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex items-end gap-2">
+                    <div className="text-3xl font-black text-white tabular-nums">Grup {mostActiveGroup}</div>
+                  </div>
+                  <div className="text-xs font-bold text-muted-foreground uppercase tracking-widest mt-1">Grup Paling Aktif</div>
+                  <div className="text-xs text-purple-400 mt-1">{mostActiveGroupGoals} gol total</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Charts Row 1: Win/Loss Distribution + Goal Trends */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Win/Loss Distribution */}
+              <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-6">
+                <h3 className="text-sm font-bold text-white mb-1">Distribusi Menang / Seri / Kalah</h3>
+                <p className="text-xs text-muted-foreground mb-5">8 tim dengan pertandingan terbanyak</p>
+                {winLossData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={260}>
+                    <BarChart data={winLossData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                      <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                      <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} allowDecimals={false} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: '#0a1929', border: '1px solid #1e3a5f', borderRadius: 8, color: '#fff', fontSize: 12 }}
+                        cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} />
+                      <Bar dataKey="Menang" fill="#22c55e" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="Seri" fill="#f59e0b" radius={[3, 3, 0, 0]} />
+                      <Bar dataKey="Kalah" fill="#ef4444" radius={[3, 3, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-[260px] flex items-center justify-center text-muted-foreground text-sm">Belum ada data pertandingan</div>
+                )}
+              </div>
+
+              {/* Goal Trends */}
+              <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-6">
+                <h3 className="text-sm font-bold text-white mb-1">Tren Gol per Match Day</h3>
+                <p className="text-xs text-muted-foreground mb-5">Total gol di setiap match day fase grup</p>
+                {goalTrendData.length > 0 ? (
+                  <ResponsiveContainer width="100%" height={260}>
+                    <LineChart data={goalTrendData} margin={{ top: 0, right: 10, left: -20, bottom: 0 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" />
+                      <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                      <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} allowDecimals={false} />
+                      <Tooltip
+                        contentStyle={{ backgroundColor: '#0a1929', border: '1px solid #1e3a5f', borderRadius: 8, color: '#fff', fontSize: 12 }}
+                        cursor={{ stroke: '#3b82f6', strokeWidth: 1 }}
+                      />
+                      <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} />
+                      <Line
+                        type="monotone"
+                        dataKey="Gol"
+                        stroke="#3b82f6"
+                        strokeWidth={2.5}
+                        dot={{ fill: '#3b82f6', r: 4 }}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="h-[260px] flex items-center justify-center text-muted-foreground text-sm">Belum ada data gol</div>
+                )}
+              </div>
+            </div>
+
+            {/* Team Strength Ranking */}
+            <div className="bg-[#0D2137] border border-border/40 rounded-2xl p-6">
+              <h3 className="text-sm font-bold text-white mb-1">Ranking Kekuatan Tim</h3>
+              <p className="text-xs text-muted-foreground mb-5">Berdasarkan poin & gol dicetak (top 8)</p>
+              {strengthData.length > 0 ? (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={strengthData} layout="vertical" margin={{ top: 0, right: 20, left: 10, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#1e3a5f" horizontal={false} />
+                    <XAxis type="number" tick={{ fill: '#94a3b8', fontSize: 11 }} allowDecimals={false} />
+                    <YAxis type="category" dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} width={36} />
+                    <Tooltip
+                      contentStyle={{ backgroundColor: '#0a1929', border: '1px solid #1e3a5f', borderRadius: 8, color: '#fff', fontSize: 12 }}
+                      cursor={{ fill: 'rgba(255,255,255,0.04)' }}
+                    />
+                    <Legend wrapperStyle={{ fontSize: 12, color: '#94a3b8' }} />
+                    <Bar dataKey="Poin" fill="#6366f1" radius={[0, 3, 3, 0]} />
+                    <Bar dataKey="GolDicetak" fill="#0ea5e9" radius={[0, 3, 3, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="h-[280px] flex items-center justify-center text-muted-foreground text-sm">Belum ada data klasemen</div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* ===== TEAMS TAB ===== */}
         {activeTab === 'teams' && (
