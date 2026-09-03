@@ -9,7 +9,7 @@ const navLinks = [
   { label: 'Klasemen', href: '/standings' },
   { label: 'Jadwal', href: '/schedule' },
   { label: '16 Besar', href: '/r16' },
-  { label: 'Tim', href: '/standings?team=tim' },
+  { label: 'Tim', href: '/teams' },
   { label: 'Admin', href: '/admin' },
 ];
 
