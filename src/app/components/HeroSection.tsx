@@ -12,8 +12,9 @@ export default function HeroSection() {
           alt="Football stadium at night with floodlights illuminating the green pitch, dark atmospheric stands, dramatic shadows"
           fill
           priority
+          quality={60}
           className="object-cover"
-          sizes="100vw" />
+          sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 100vw" />
         
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent"></div>
