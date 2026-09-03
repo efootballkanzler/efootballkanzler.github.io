@@ -19,8 +19,8 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
-  title: 'LeagueSite — Liga Sepakbola Lokal',
-  description: 'Ikuti klasemen, jadwal, bracket 16 besar, dan profil tim liga sepakbola lokal terlengkap di LeagueSite.',
+  title: 'Kanzler eFootball League',
+  description: 'Ikuti klasemen, jadwal, bracket 16 besar, dan profil tim Kanzler eFootball League terlengkap.',
   icons: {
     icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
   },

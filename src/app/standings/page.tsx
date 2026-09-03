@@ -2,13 +2,12 @@ import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GroupTable from '@/app/standings/components/GroupTable';
-import TopScorersWidget from '@/app/standings/components/TopScorersWidget';
 import TeamProfilesGrid from '@/app/standings/components/TeamProfilesGrid';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Klasemen Grup — LeagueSite',
-  description: 'Lihat klasemen lengkap semua grup liga sepakbola lokal: poin, menang, kalah, dan selisih gol setiap tim.',
+  title: 'Klasemen Grup — Kanzler eFootball League',
+  description: 'Lihat klasemen lengkap semua grup Kanzler eFootball League: poin, menang, kalah, dan selisih gol setiap tim.',
 };
 
 export default function StandingsPage() {
@@ -45,7 +44,6 @@ export default function StandingsPage() {
 
             {/* Sidebar */}
             <div className="lg:col-span-4 space-y-6">
-              <TopScorersWidget />
               <TeamProfilesGrid />
             </div>
           </div>

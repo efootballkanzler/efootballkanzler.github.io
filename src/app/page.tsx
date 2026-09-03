@@ -5,7 +5,6 @@ import HeroSection from '@/app/components/HeroSection';
 import StandingsPreview from '@/app/components/StandingsPreview';
 import BracketSection from '@/app/components/BracketSection';
 import RecentMatches from '@/app/components/RecentMatches';
-import TopScorersSection from '@/app/components/TopScorersSection';
 
 export default function HomePage() {
   return (
@@ -16,7 +15,6 @@ export default function HomePage() {
         <StandingsPreview />
         <BracketSection />
         <RecentMatches />
-        <TopScorersSection />
       </main>
       <Footer />
     </>
