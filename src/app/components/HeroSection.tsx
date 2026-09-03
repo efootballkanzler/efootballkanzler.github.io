@@ -74,11 +74,11 @@ export default function HeroSection() {
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Grup Aktif</p>
             </div>
             <div>
-              <p className="text-3xl font-black text-foreground">48</p>
+              <p className="text-3xl font-black text-foreground">0</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Pertandingan Dimainkan</p>
             </div>
             <div>
-              <p className="text-3xl font-black text-foreground">142</p>
+              <p className="text-3xl font-black text-foreground">0</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Gol</p>
             </div>
           </div>

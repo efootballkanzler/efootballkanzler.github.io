@@ -173,61 +173,40 @@ export const teams: Team[] = [
 
 export const standings: Record<string, Standing[]> = {
   A: [
-    { teamId: 'persija', played: 6, won: 5, drawn: 0, lost: 1, gf: 14, ga: 5, gd: 9, points: 15 },
-    { teamId: 'persib', played: 6, won: 4, drawn: 1, lost: 1, gf: 11, ga: 6, gd: 5, points: 13 },
-    { teamId: 'persis', played: 6, won: 2, drawn: 1, lost: 3, gf: 7, ga: 9, gd: -2, points: 7 },
-    { teamId: 'psis', played: 6, won: 0, drawn: 0, lost: 6, gf: 2, ga: 14, gd: -12, points: 0 },
+    { teamId: 'persija', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'persib', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'persis', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'psis', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
   ],
   B: [
-    { teamId: 'arema', played: 6, won: 4, drawn: 2, lost: 0, gf: 13, ga: 4, gd: 9, points: 14 },
-    { teamId: 'persebaya', played: 6, won: 4, drawn: 0, lost: 2, gf: 12, ga: 7, gd: 5, points: 12 },
-    { teamId: 'psbk', played: 6, won: 1, drawn: 2, lost: 3, gf: 5, ga: 10, gd: -5, points: 5 },
-    { teamId: 'psim', played: 6, won: 0, drawn: 2, lost: 4, gf: 3, ga: 12, gd: -9, points: 2 },
+    { teamId: 'arema', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'persebaya', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'psbk', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'psim', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
   ],
   C: [
-    { teamId: 'psm', played: 6, won: 5, drawn: 1, lost: 0, gf: 16, ga: 3, gd: 13, points: 16 },
-    { teamId: 'persipura', played: 6, won: 3, drawn: 2, lost: 1, gf: 10, ga: 6, gd: 4, points: 11 },
-    { teamId: 'sriwijaya', played: 6, won: 2, drawn: 0, lost: 4, gf: 6, ga: 11, gd: -5, points: 6 },
-    { teamId: 'borneo', played: 6, won: 0, drawn: 1, lost: 5, gf: 3, ga: 15, gd: -12, points: 1 },
+    { teamId: 'psm', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'persipura', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'sriwijaya', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'borneo', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
   ],
   D: [
-    { teamId: 'bali', played: 6, won: 4, drawn: 2, lost: 0, gf: 15, ga: 5, gd: 10, points: 14 },
-    { teamId: 'madura', played: 6, won: 3, drawn: 1, lost: 2, gf: 10, ga: 8, gd: 2, points: 10 },
-    { teamId: 'persela', played: 6, won: 2, drawn: 0, lost: 4, gf: 6, ga: 12, gd: -6, points: 6 },
-    { teamId: 'pss', played: 6, won: 0, drawn: 1, lost: 5, gf: 2, ga: 8, gd: -6, points: 1 },
+    { teamId: 'bali', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'madura', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'persela', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
+    { teamId: 'pss', played: 0, won: 0, drawn: 0, lost: 0, gf: 0, ga: 0, gd: 0, points: 0 },
   ],
 };
 
-export const matches: Match[] = [
-  // Group Stage
-  { id: 'm1', homeTeamId: 'persija', awayTeamId: 'persib', homeScore: 2, awayScore: 1, date: '2026-08-01', time: '15:30', venue: 'Stadion GBK, Jakarta', matchDay: 1, stage: 'group', group: 'A', status: 'completed' },
-  { id: 'm2', homeTeamId: 'persis', awayTeamId: 'psis', homeScore: 1, awayScore: 0, date: '2026-08-01', time: '18:00', venue: 'Stadion Manahan, Solo', matchDay: 1, stage: 'group', group: 'A', status: 'completed' },
-  { id: 'm3', homeTeamId: 'arema', awayTeamId: 'persebaya', homeScore: 2, awayScore: 2, date: '2026-08-02', time: '15:30', venue: 'Stadion Kanjuruhan, Malang', matchDay: 1, stage: 'group', group: 'B', status: 'completed' },
-  { id: 'm4', homeTeamId: 'psm', awayTeamId: 'persipura', homeScore: 3, awayScore: 1, date: '2026-08-02', time: '18:00', venue: 'Stadion Mattoangin, Makassar', matchDay: 1, stage: 'group', group: 'C', status: 'completed' },
-  { id: 'm5', homeTeamId: 'bali', awayTeamId: 'madura', homeScore: 2, awayScore: 0, date: '2026-08-03', time: '15:30', venue: 'Stadion Kapten I Wayan Dipta, Bali', matchDay: 1, stage: 'group', group: 'D', status: 'completed' },
-  { id: 'm6', homeTeamId: 'persija', awayTeamId: 'persis', homeScore: 3, awayScore: 0, date: '2026-08-08', time: '15:30', venue: 'Stadion GBK, Jakarta', matchDay: 2, stage: 'group', group: 'A', status: 'completed' },
-  { id: 'm7', homeTeamId: 'persib', awayTeamId: 'psis', homeScore: 3, awayScore: 0, date: '2026-08-08', time: '18:00', venue: 'Stadion GBLA, Bandung', matchDay: 2, stage: 'group', group: 'A', status: 'completed' },
-  { id: 'm8', homeTeamId: 'arema', awayTeamId: 'psim', homeScore: 3, awayScore: 0, date: '2026-08-09', time: '15:30', venue: 'Stadion Kanjuruhan, Malang', matchDay: 2, stage: 'group', group: 'B', status: 'completed' },
-  { id: 'm9', homeTeamId: 'persebaya', awayTeamId: 'psbk', homeScore: 2, awayScore: 1, date: '2026-08-09', time: '18:00', venue: 'Stadion GBT, Surabaya', matchDay: 2, stage: 'group', group: 'B', status: 'completed' },
-  { id: 'm10', homeTeamId: 'psm', awayTeamId: 'sriwijaya', homeScore: 2, awayScore: 0, date: '2026-08-10', time: '15:30', venue: 'Stadion Mattoangin, Makassar', matchDay: 2, stage: 'group', group: 'C', status: 'completed' },
-  // 16 Besar
-  { id: 'r1', homeTeamId: 'persija', awayTeamId: 'madura', homeScore: 2, awayScore: 0, date: '2026-09-06', time: '15:30', venue: 'Stadion GBK, Jakarta', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r2', homeTeamId: 'arema', awayTeamId: 'persipura', homeScore: null, awayScore: null, date: '2026-09-06', time: '18:00', venue: 'Stadion Kanjuruhan, Malang', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r3', homeTeamId: 'psm', awayTeamId: 'persib', homeScore: null, awayScore: null, date: '2026-09-07', time: '15:30', venue: 'Stadion Mattoangin, Makassar', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r4', homeTeamId: 'bali', awayTeamId: 'persebaya', homeScore: null, awayScore: null, date: '2026-09-07', time: '18:00', venue: 'Stadion Kapten I Wayan Dipta, Bali', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r5', homeTeamId: 'persis', awayTeamId: 'borneo', homeScore: null, awayScore: null, date: '2026-09-08', time: '15:30', venue: 'Stadion Manahan, Solo', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r6', homeTeamId: 'sriwijaya', awayTeamId: 'psbk', homeScore: null, awayScore: null, date: '2026-09-08', time: '18:00', venue: 'Stadion Jakabaring, Palembang', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r7', homeTeamId: 'persela', awayTeamId: 'psim', homeScore: null, awayScore: null, date: '2026-09-09', time: '15:30', venue: 'Stadion Surajaya, Lamongan', matchDay: 1, stage: 'r16', status: 'upcoming' },
-  { id: 'r8', homeTeamId: 'psis', awayTeamId: 'pss', homeScore: null, awayScore: null, date: '2026-09-09', time: '18:00', venue: 'Stadion Citarum, Semarang', matchDay: 1, stage: 'r16', status: 'upcoming' },
-];
+export const matches: Match[] = [];
 
 export const topScorers = [
-  { playerId: 'p14', playerName: 'Hendra Wijaya', teamId: 'psm', teamName: 'Player 9', goals: 11 },
-  { playerId: 'p10', playerName: 'Rizky Pratama', teamId: 'arema', teamName: 'Player 5', goals: 10 },
-  { playerId: 'p4', playerName: 'Wahyu Gunawan', teamId: 'persija', teamName: 'Player 1', goals: 9 },
-  { playerId: 'p18', playerName: 'Made Suardana', teamId: 'bali', teamName: 'Player 13', goals: 9 },
-  { playerId: 'p7', playerName: 'Fajri Santoso', teamId: 'persib', teamName: 'Player 2', goals: 8 },
-  { playerId: 'p11', playerName: 'Irfan Maulana', teamId: 'persebaya', teamName: 'Player 6', goals: 8 },
+  { playerId: 'p14', playerName: 'Hendra Wijaya', teamId: 'psm', teamName: 'Player 9', goals: 0 },
+  { playerId: 'p10', playerName: 'Rizky Pratama', teamId: 'arema', teamName: 'Player 5', goals: 0 },
+  { playerId: 'p4', playerName: 'Wahyu Gunawan', teamId: 'persija', teamName: 'Player 1', goals: 0 },
+  { playerId: 'p18', playerName: 'Made Suardana', teamId: 'bali', teamName: 'Player 13', goals: 0 },
+  { playerId: 'p7', playerName: 'Fajri Santoso', teamId: 'persib', teamName: 'Player 2', goals: 0 },
+  { playerId: 'p11', playerName: 'Irfan Maulana', teamId: 'persebaya', teamName: 'Player 6', goals: 0 },
 ];
 
 export function getTeamById(id: string): Team | undefined {
