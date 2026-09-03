@@ -713,13 +713,13 @@ export default function AdminPage() {
       )}
 
       {/* Top Bar */}
-      <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6 py-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+      <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4">
           <div>
             <h1 className="text-xl font-bold text-white">Admin Panel</h1>
-            <p className="text-gray-400 text-xs mt-0.5">Kelola data liga & kompetisi</p>
+            <p className="text-gray-400 text-xs mt-0.5">Kelola data liga &amp; kompetisi</p>
           </div>
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             {(anySaved || configSaved) && (
               <span className="text-green-400 text-xs font-medium flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -762,18 +762,18 @@ export default function AdminPage() {
 
       {/* Tabs */}
       <div className="bg-[#0A1929] border-b border-white/10 px-4 sm:px-6">
-        <div className="max-w-6xl mx-auto flex gap-1 overflow-x-auto">
+        <div className="max-w-6xl mx-auto flex gap-0.5 sm:gap-1 overflow-x-auto scrollbar-hide">
           {([
             { key: 'dashboard', label: 'Dashboard' },
-            { key: 'teams', label: 'Manajemen Tim' },
+            { key: 'teams', label: 'Tim' },
             { key: 'fixtures', label: 'Fixture' },
-            { key: 'matches', label: 'Skor Pertandingan' },
-            { key: 'config', label: 'Konfigurasi Liga' },
+            { key: 'matches', label: 'Skor' },
+            { key: 'config', label: 'Konfigurasi' },
           ] as { key: typeof activeTab; label: string }[]).map(tab => (
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+              className={`px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex-shrink-0 ${
                 activeTab === tab.key
                   ? 'border-blue-500 text-blue-400' :'border-transparent text-gray-400 hover:text-gray-200'
               }`}
@@ -786,7 +786,7 @@ export default function AdminPage() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6">
         {/* Dashboard Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {/* Total Tim */}
           <button
             onClick={() => setActiveTab('teams')}
@@ -1027,12 +1027,12 @@ export default function AdminPage() {
               <strong>Catatan:</strong> Perubahan disimpan di browser (localStorage). Data ini digunakan untuk tampilan di halaman Klasemen dan Tim.
             </div>
 
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-wrap gap-2 mb-6">
               {GROUPS.map(g => (
                 <button
                   key={g}
                   onClick={() => { setActiveGroup(g); setShowForm(false); }}
-                  className={`px-5 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
+                  className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
                     activeGroup === g
                       ? 'bg-accent text-accent-foreground'
                       : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
@@ -1044,13 +1044,13 @@ export default function AdminPage() {
             </div>
 
             <div className="bg-[#0D2137] rounded-2xl border border-border/40 overflow-hidden mb-4">
-              <div className="px-5 py-4 border-b border-border/30 flex items-center justify-between">
+              <div className="px-4 sm:px-5 py-4 border-b border-border/30 flex items-center justify-between gap-3">
                 <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                  {groupTeams.length} Tim di Grup {activeGroup}
+                  {groupTeams.length} Tim · Grup {activeGroup}
                 </span>
                 <button
                   onClick={openAdd}
-                  className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-accent/90 transition-all"
+                  className="flex items-center gap-2 bg-accent text-accent-foreground px-3 sm:px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-accent/90 transition-all flex-shrink-0"
                 >
                   <span className="text-base leading-none">+</span> Tambah Tim
                 </button>
@@ -1063,7 +1063,7 @@ export default function AdminPage() {
               ) : (
                 <div className="divide-y divide-border/20">
                   {groupTeams.map(team => (
-                    <div key={team.id} className="flex items-center gap-4 px-5 py-4 hover:bg-white/5 transition-colors">
+                    <div key={team.id} className="flex items-center gap-3 px-4 sm:px-5 py-4 hover:bg-white/5 transition-colors">
                       <div
                         className="w-8 h-8 rounded-lg flex-shrink-0 border border-white/10"
                         style={{ backgroundColor: team.colors.primary }}
@@ -1075,10 +1075,10 @@ export default function AdminPage() {
                           {team.city}
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                         <button
                           onClick={() => openEdit(team)}
-                          className="text-xs font-bold text-accent hover:text-accent/80 border border-accent/30 hover:border-accent/60 px-3 py-1.5 rounded-lg transition-all"
+                          className="text-xs font-bold text-accent hover:text-accent/80 border border-accent/30 hover:border-accent/60 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all"
                         >
                           Edit
                         </button>
@@ -1086,7 +1086,7 @@ export default function AdminPage() {
                           <div className="flex items-center gap-1">
                             <button
                               onClick={() => handleDelete(team.id)}
-                              className="text-xs font-bold text-red-400 border border-red-400/40 px-3 py-1.5 rounded-lg hover:bg-red-400/10 transition-all"
+                              className="text-xs font-bold text-red-400 border border-red-400/40 px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-red-400/10 transition-all"
                             >
                               Hapus?
                             </button>
@@ -1094,13 +1094,13 @@ export default function AdminPage() {
                               onClick={() => setDeleteConfirm(null)}
                               className="text-xs text-muted-foreground border border-border/40 px-2 py-1.5 rounded-lg hover:text-foreground transition-all"
                             >
-                              Batal
+                              ✕
                             </button>
                           </div>
                         ) : (
                           <button
                             onClick={() => setDeleteConfirm(team.id)}
-                            className="text-xs font-bold text-muted-foreground hover:text-red-400 border border-border/40 hover:border-red-400/40 px-3 py-1.5 rounded-lg transition-all"
+                            className="text-xs font-bold text-muted-foreground hover:text-red-400 border border-border/40 hover:border-red-400/40 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all"
                           >
                             Hapus
                           </button>
@@ -1114,7 +1114,7 @@ export default function AdminPage() {
 
             {showForm && (
               <div className="bg-[#0D2137] rounded-2xl border border-accent/30 overflow-hidden">
-                <div className="px-5 py-4 border-b border-border/30 flex items-center justify-between">
+                <div className="px-4 sm:px-5 py-4 border-b border-border/30 flex items-center justify-between">
                   <h2 className="text-sm font-black uppercase tracking-widest text-accent">
                     {editingId ? 'Edit Tim' : 'Tambah Tim Baru'}
                   </h2>
@@ -1126,7 +1126,7 @@ export default function AdminPage() {
                   </button>
                 </div>
 
-                <form onSubmit={handleSubmit} className="px-5 py-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <form onSubmit={handleSubmit} className="px-4 sm:px-5 py-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   <div className="sm:col-span-2">
                     <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
                       Nama Tim <span className="text-red-400">*</span>
@@ -1347,15 +1347,15 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => { setShowForm(false); setEditingId(null); }}
-                      className="px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
+                      className="px-4 sm:px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
                     >
                       Batal
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
+                      className="px-5 sm:px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
                     >
-                      {editingId ? 'Simpan Perubahan' : 'Tambah Tim'}
+                      {editingId ? 'Simpan' : 'Tambah Tim'}
                     </button>
                   </div>
                 </form>
@@ -1376,7 +1376,7 @@ export default function AdminPage() {
                 <button
                   key={stage}
                   onClick={() => { setActiveStage(stage); setEditingMatchId(null); setMatchForm(null); }}
-                  className={`px-5 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
+                  className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
                     activeStage === stage
                       ? 'bg-accent text-accent-foreground'
                       : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
@@ -1399,22 +1399,23 @@ export default function AdminPage() {
                       isEditing ? 'border-accent/50' : 'border-border/40'
                     }`}
                   >
-                    <div className="px-5 py-4 flex items-center gap-4">
+                    <div className="px-4 sm:px-5 py-4 flex items-start sm:items-center gap-3 sm:gap-4">
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3">
-                          <span className="text-sm font-black text-foreground truncate">{getTeamFullName(match.homeTeamId)}</span>
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <span className="text-lg font-black text-foreground font-mono w-6 text-center">
+                        {/* Score row */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-sm font-black text-foreground truncate max-w-[100px] sm:max-w-none">{getTeamFullName(match.homeTeamId)}</span>
+                          <div className="flex items-center gap-1 flex-shrink-0">
+                            <span className="text-base sm:text-lg font-black text-foreground font-mono w-5 sm:w-6 text-center">
                               {match.homeScore !== null ? match.homeScore : '—'}
                             </span>
                             <span className="text-muted-foreground text-sm">:</span>
-                            <span className="text-lg font-black text-foreground font-mono w-6 text-center">
+                            <span className="text-base sm:text-lg font-black text-foreground font-mono w-5 sm:w-6 text-center">
                               {match.awayScore !== null ? match.awayScore : '—'}
                             </span>
                           </div>
-                          <span className="text-sm font-black text-foreground truncate">{getTeamFullName(match.awayTeamId)}</span>
+                          <span className="text-sm font-black text-foreground truncate max-w-[100px] sm:max-w-none">{getTeamFullName(match.awayTeamId)}</span>
                         </div>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="flex items-center gap-2 mt-1 flex-wrap">
                           <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${STATUS_COLORS[status]}`}>
                             {status === 'live' && <span className="inline-block w-1.5 h-1.5 bg-green-400 rounded-full mr-1 animate-pulse" />}
                             {STATUS_LABELS[status]}
@@ -1425,7 +1426,7 @@ export default function AdminPage() {
                           )}
                         </div>
                         {((match as any).homeGoalScorers || (match as any).awayGoalScorers) && (
-                          <div className="mt-1.5 flex gap-4 text-xs text-muted-foreground">
+                          <div className="mt-1.5 flex flex-col sm:flex-row gap-1 sm:gap-4 text-xs text-muted-foreground">
                             {(match as any).homeGoalScorers && (
                               <span>⚽ {getTeamName(match.homeTeamId)}: {(match as any).homeGoalScorers}</span>
                             )}
@@ -1458,7 +1459,7 @@ export default function AdminPage() {
                     {isEditing && matchForm && (
                       <form
                         onSubmit={handleMatchSubmit}
-                        className="px-5 pb-5 pt-1 border-t border-border/30 grid grid-cols-1 sm:grid-cols-2 gap-4"
+                        className="px-4 sm:px-5 pb-5 pt-1 border-t border-border/30 grid grid-cols-1 sm:grid-cols-2 gap-4"
                       >
                         <div className="sm:col-span-2">
                           <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-2">
@@ -1470,7 +1471,7 @@ export default function AdminPage() {
                                 key={s}
                                 type="button"
                                 onClick={() => setMatchForm(f => f ? { ...f, status: s } : f)}
-                                className={`px-4 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                                className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-bold border transition-all ${
                                   matchForm.status === s
                                     ? STATUS_COLORS[s] + 'font-black' :'text-muted-foreground border-border/40 hover:text-foreground'
                                 }`}
@@ -1552,13 +1553,13 @@ export default function AdminPage() {
                           <button
                             type="button"
                             onClick={() => { setEditingMatchId(null); setMatchForm(null); }}
-                            className="px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
+                            className="px-4 sm:px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
                           >
                             Batal
                           </button>
                           <button
                             type="submit"
-                            className="px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
+                            className="px-5 sm:px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
                           >
                             Simpan Skor
                           </button>
@@ -1580,7 +1581,7 @@ export default function AdminPage() {
             </div>
 
             {/* Group Tabs */}
-            <div className="flex gap-2 mb-6">
+            <div className="flex flex-wrap gap-2 mb-6">
               {GROUPS.map(g => (
                 <button
                   key={g}
@@ -1589,7 +1590,7 @@ export default function AdminPage() {
                     setShowFixtureForm(false);
                     setEditingFixtureId(null);
                   }}
-                  className={`px-5 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
+                  className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
                     activeFixtureGroup === g
                       ? 'bg-accent text-accent-foreground'
                       : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
@@ -1602,13 +1603,13 @@ export default function AdminPage() {
 
             {/* Fixture List */}
             <div className="bg-[#0D2137] rounded-2xl border border-border/40 overflow-hidden mb-4">
-              <div className="px-5 py-4 border-b border-border/30 flex items-center justify-between">
+              <div className="px-4 sm:px-5 py-4 border-b border-border/30 flex items-center justify-between gap-3">
                 <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                  {groupFixtures.length} Fixture di Grup {activeFixtureGroup}
+                  {groupFixtures.length} Fixture · Grup {activeFixtureGroup}
                 </span>
                 <button
                   onClick={openAddFixture}
-                  className="flex items-center gap-2 bg-accent text-accent-foreground px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-accent/90 transition-all"
+                  className="flex items-center gap-2 bg-accent text-accent-foreground px-3 sm:px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-accent/90 transition-all flex-shrink-0"
                 >
                   <span className="text-base leading-none">+</span> Tambah Fixture
                 </button>
@@ -1621,10 +1622,10 @@ export default function AdminPage() {
               ) : (
                 <div className="divide-y divide-border/20">
                   {groupFixtures.map(fixture => (
-                    <div key={fixture.id} className="px-5 py-4 hover:bg-white/5 transition-colors">
-                      <div className="flex items-start gap-4">
+                    <div key={fixture.id} className="px-4 sm:px-5 py-4 hover:bg-white/5 transition-colors">
+                      <div className="flex items-start gap-3 sm:gap-4">
                         {/* Date/Time block */}
-                        <div className="flex-shrink-0 bg-[#071428] rounded-xl px-3 py-2 text-center min-w-[64px] border border-border/30">
+                        <div className="flex-shrink-0 bg-[#071428] rounded-xl px-2.5 sm:px-3 py-2 text-center min-w-[56px] sm:min-w-[64px] border border-border/30">
                           <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                             {fixture.date ? formatDate(fixture.date).split('/').slice(0, 2).join('/') : '—'}
                           </div>
@@ -1638,7 +1639,7 @@ export default function AdminPage() {
                             <span className="text-xs font-bold text-muted-foreground bg-white/5 px-2 py-0.5 rounded">VS</span>
                             <span className="text-sm font-black text-foreground">{getTeamFullName(fixture.awayTeamId)}</span>
                           </div>
-                          <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                          <div className="flex items-center gap-2 sm:gap-3 mt-1.5 flex-wrap">
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
                               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -1653,10 +1654,10 @@ export default function AdminPage() {
                         </div>
 
                         {/* Actions */}
-                        <div className="flex items-center gap-2 flex-shrink-0">
+                        <div className="flex flex-col sm:flex-row items-end sm:items-center gap-1.5 sm:gap-2 flex-shrink-0">
                           <button
                             onClick={() => openEditFixture(fixture)}
-                            className="text-xs font-bold text-accent hover:text-accent/80 border border-accent/30 hover:border-accent/60 px-3 py-1.5 rounded-lg transition-all"
+                            className="text-xs font-bold text-accent hover:text-accent/80 border border-accent/30 hover:border-accent/60 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all"
                           >
                             Edit
                           </button>
@@ -1664,7 +1665,7 @@ export default function AdminPage() {
                             <div className="flex items-center gap-1">
                               <button
                                 onClick={() => handleDeleteFixture(fixture.id)}
-                                className="text-xs font-bold text-red-400 border border-red-400/40 px-3 py-1.5 rounded-lg hover:bg-red-400/10 transition-all"
+                                className="text-xs font-bold text-red-400 border border-red-400/40 px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-red-400/10 transition-all"
                               >
                                 Hapus?
                               </button>
@@ -1672,13 +1673,13 @@ export default function AdminPage() {
                                 onClick={() => setDeleteFixtureConfirm(null)}
                                 className="text-xs text-muted-foreground border border-border/40 px-2 py-1.5 rounded-lg hover:text-foreground transition-all"
                               >
-                                Batal
+                                ✕
                               </button>
                             </div>
                           ) : (
                             <button
                               onClick={() => setDeleteFixtureConfirm(fixture.id)}
-                              className="text-xs font-bold text-muted-foreground hover:text-red-400 border border-border/40 hover:border-red-400/40 px-3 py-1.5 rounded-lg transition-all"
+                              className="text-xs font-bold text-muted-foreground hover:text-red-400 border border-border/40 hover:border-red-400/40 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all"
                             >
                               Hapus
                             </button>
@@ -1694,7 +1695,7 @@ export default function AdminPage() {
             {/* Add / Edit Fixture Form */}
             {showFixtureForm && (
               <div className="bg-[#0D2137] rounded-2xl border border-accent/30 overflow-hidden">
-                <div className="px-5 py-4 border-b border-border/30 flex items-center justify-between">
+                <div className="px-4 sm:px-5 py-4 border-b border-border/30 flex items-center justify-between">
                   <h2 className="text-sm font-black uppercase tracking-widest text-accent">
                     {editingFixtureId ? 'Edit Fixture' : 'Tambah Fixture Baru'}
                   </h2>
@@ -1706,7 +1707,7 @@ export default function AdminPage() {
                   </button>
                 </div>
 
-                <form onSubmit={handleFixtureSubmit} className="px-5 py-6 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <form onSubmit={handleFixtureSubmit} className="px-4 sm:px-5 py-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                   {/* Home Team */}
                   <div>
                     <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
@@ -1840,15 +1841,15 @@ export default function AdminPage() {
                     <button
                       type="button"
                       onClick={() => { setShowFixtureForm(false); setEditingFixtureId(null); }}
-                      className="px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
+                      className="px-4 sm:px-5 py-2.5 text-sm font-bold text-muted-foreground border border-border/40 rounded-lg hover:text-foreground hover:border-border transition-all"
                     >
                       Batal
                     </button>
                     <button
                       type="submit"
-                      className="px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
+                      className="px-5 sm:px-6 py-2.5 text-sm font-black uppercase tracking-widest bg-accent text-accent-foreground rounded-lg hover:bg-accent/90 transition-all"
                     >
-                      {editingFixtureId ? 'Simpan Perubahan' : 'Tambah Fixture'}
+                      {editingFixtureId ? 'Simpan' : 'Tambah Fixture'}
                     </button>
                   </div>
                 </form>
@@ -1861,12 +1862,12 @@ export default function AdminPage() {
         {activeTab === 'config' && (
           <form onSubmit={handleConfigSave} className="space-y-6">
             {/* Header */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div>
                 <h2 className="text-lg font-bold text-white">Konfigurasi Liga</h2>
                 <p className="text-gray-400 text-sm mt-0.5">Atur nama liga, peraturan turnamen, struktur grup, dan regulasi pertandingan</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {configDirty && (
                   <span className="text-yellow-400 text-xs font-medium">Belum disimpan</span>
                 )}
@@ -1887,7 +1888,7 @@ export default function AdminPage() {
             </div>
 
             {/* Section 1: Informasi Liga */}
-            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center">
                   <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1942,7 +1943,7 @@ export default function AdminPage() {
             </div>
 
             {/* Section 2: Peraturan Turnamen */}
-            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-7 h-7 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                   <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2010,7 +2011,7 @@ export default function AdminPage() {
             </div>
 
             {/* Section 3: Struktur Grup */}
-            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-7 h-7 rounded-lg bg-green-500/20 flex items-center justify-center">
                   <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2066,7 +2067,7 @@ export default function AdminPage() {
             </div>
 
             {/* Section 4: Regulasi Pertandingan */}
-            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-5">
+            <div className="bg-[#0D2137] border border-white/10 rounded-xl p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-7 h-7 rounded-lg bg-purple-500/20 flex items-center justify-center">
                   <svg className="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -2142,7 +2143,7 @@ export default function AdminPage() {
             </div>
 
             {/* Summary Card */}
-            <div className="bg-[#0D2137] border border-blue-500/20 rounded-xl p-5">
+            <div className="bg-[#0D2137] border border-blue-500/20 rounded-xl p-4 sm:p-5">
               <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
                 <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -2169,7 +2170,7 @@ export default function AdminPage() {
             </div>
 
             {/* Save button bottom */}
-            <div className="flex justify-end gap-3 pb-4">
+            <div className="flex flex-wrap justify-end gap-3 pb-4">
               <button
                 type="button"
                 onClick={handleConfigReset}
