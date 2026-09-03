@@ -12,8 +12,9 @@ export default function HeroSection() {
           alt="Football stadium at night with floodlights illuminating the green pitch, dark atmospheric stands, dramatic shadows"
           fill
           priority
+          quality={60}
           className="object-cover"
-          sizes="100vw" />
+          sizes="(max-width: 640px) 640px, (max-width: 1024px) 1024px, 100vw" />
         
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-background/20"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-background/80 via-transparent to-transparent"></div>
@@ -21,7 +22,7 @@ export default function HeroSection() {
 
       {/* Monolith Ghost Text */}
       <div className="absolute inset-0 flex items-center justify-center z-0 overflow-hidden">
-        <span className="monolith-ghost select-none">LIGA</span>
+        <span className="monolith-ghost select-none">KANZLER</span>
       </div>
 
       {/* Content */}
@@ -38,9 +39,9 @@ export default function HeroSection() {
           </div>
 
           <h1 className="hero-title font-extrabold text-foreground uppercase leading-none">
-            Liga<br />
-            <span className="text-gradient-gold">Sepakbola</span><br />
-            Lokal
+            Kanzler<br />
+            <span className="text-gradient-gold">eFootball</span><br />
+            League
           </h1>
 
           <p className="text-lg text-foreground/60 max-w-md leading-relaxed font-medium">
@@ -74,11 +75,11 @@ export default function HeroSection() {
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Grup Aktif</p>
             </div>
             <div>
-              <p className="text-3xl font-black text-foreground">48</p>
+              <p className="text-3xl font-black text-foreground">0</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Pertandingan Dimainkan</p>
             </div>
             <div>
-              <p className="text-3xl font-black text-foreground">142</p>
+              <p className="text-3xl font-black text-foreground">0</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Gol</p>
             </div>
           </div>

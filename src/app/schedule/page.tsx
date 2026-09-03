@@ -6,8 +6,8 @@ import BracketDraw from '@/app/schedule/components/BracketDraw';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Jadwal & Hasil — LeagueSite',
-  description: 'Jadwal lengkap dan hasil pertandingan liga sepakbola lokal, termasuk fase grup dan 16 besar.',
+  title: 'Jadwal & Hasil — Kanzler eFootball League',
+  description: 'Jadwal lengkap dan hasil pertandingan Kanzler eFootball League, termasuk fase grup dan 16 besar.',
 };
 
 export default function SchedulePage() {

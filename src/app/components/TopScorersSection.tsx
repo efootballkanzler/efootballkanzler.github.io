@@ -42,7 +42,7 @@ export default function TopScorersSection() {
                     <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">PSM Makassar</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-4xl font-black text-gradient-gold">11</p>
+                    <p className="text-4xl font-black text-gradient-gold">0</p>
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Gol</p>
                   </div>
                 </div>

@@ -587,37 +587,6 @@ export default function TeamPage() {
                     </div>
                   ))}
                 </div>
-
-                {/* Group performance */}
-                <h3 className="text-lg font-black uppercase tracking-tight text-foreground mt-8 mb-4">Performa Grup {team.group}</h3>
-                <div className="space-y-2">
-                  {groupTeams.map(({ team: gt, points, won, drawn, lost, played }, idx) => (
-                    <div
-                      key={gt?.id}
-                      className={`flex items-center gap-3 rounded-xl p-3 border transition-colors ${
-                        gt?.id === team.id ? 'border-accent/40 bg-accent/5' : 'border-border bg-primary'
-                      }`}
-                    >
-                      <span className={`w-5 text-center text-xs font-black ${idx === 0 ? 'text-accent' : 'text-muted-foreground'}`}>{idx + 1}</span>
-                      <div
-                        className="w-7 h-7 rounded-lg flex items-center justify-center text-[9px] font-black text-white shrink-0"
-                        style={{ background: gt?.colors.primary ?? '#666' }}
-                      >
-                        {gt?.shortName}
-                      </div>
-                      <Link href={`/team/${gt?.id}`} className="flex-1 text-sm font-bold text-foreground hover:text-accent transition-colors truncate">
-                        {gt?.name}
-                      </Link>
-                      <div className="flex gap-3 text-xs text-muted-foreground">
-                        <span>{played}M</span>
-                        <span className="text-green-400">{won}W</span>
-                        <span className="text-amber-400">{drawn}D</span>
-                        <span className="text-red-400">{lost}L</span>
-                        <span className="font-black text-foreground">{points}P</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             </div>
           )}
