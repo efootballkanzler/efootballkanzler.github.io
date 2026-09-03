@@ -22,6 +22,7 @@ interface TeamFormData {
   id: string;
   name: string;
   shortName: string;
+  abbreviation: string;
   city: string;
   group: string;
   logo: string;
@@ -57,6 +58,7 @@ const emptyForm = (): TeamFormData => ({
   id: '',
   name: '',
   shortName: '',
+  abbreviation: '',
   city: '',
   group: 'A',
   logo: DEFAULT_LOGO,
@@ -352,6 +354,7 @@ export default function AdminPage() {
       id: team.id,
       name: team.name,
       shortName: team.shortName,
+      abbreviation: (team as Team & { abbreviation?: string }).abbreviation || team.shortName,
       city: team.city,
       group: team.group,
       logo: team.logo,
@@ -364,10 +367,11 @@ export default function AdminPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const id = editingId || slugify(form.name) || `team-${Date.now()}`;
-    const teamData: Team = {
+    const teamData: Team & { abbreviation?: string } = {
       id,
       name: form.name.trim(),
       shortName: form.shortName.trim().toUpperCase().slice(0, 4),
+      abbreviation: form.abbreviation.trim().toUpperCase().slice(0, 5) || form.shortName.trim().toUpperCase().slice(0, 4),
       logo: form.logo.trim() || DEFAULT_LOGO,
       city: form.city.trim(),
       group: form.group,
@@ -946,6 +950,22 @@ export default function AdminPage() {
 
                   <div>
                     <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
+                      Singkatan Resmi (maks 5 huruf) <span className="text-red-400">*</span>
+                    </label>
+                    <input
+                      required
+                      type="text"
+                      maxLength={5}
+                      value={form.abbreviation}
+                      onChange={e => setForm(f => ({ ...f, abbreviation: e.target.value.toUpperCase() }))}
+                      placeholder="cth. PRSJ"
+                      className="w-full bg-[#071428] border border-border/50 focus:border-accent rounded-lg px-4 py-2.5 text-sm font-mono text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors"
+                    />
+                    <p className="text-xs text-muted-foreground/60 mt-1">Singkatan resmi yang tampil di papan skor & klasemen</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
                       Kota <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -1013,29 +1033,104 @@ export default function AdminPage() {
                     </div>
                   </div>
 
+                  {/* Logo Upload Section */}
                   <div className="sm:col-span-2">
                     <label className="block text-xs font-bold text-muted-foreground uppercase tracking-widest mb-1.5">
-                      URL Logo (opsional)
+                      Logo Tim
                     </label>
-                    <input
-                      type="url"
-                      value={form.logo}
-                      onChange={e => setForm(f => ({ ...f, logo: e.target.value }))}
-                      placeholder="https://..."
-                      className="w-full bg-[#071428] border border-border/50 focus:border-accent rounded-lg px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors"
-                    />
+                    <div className="flex items-start gap-4">
+                      {/* Logo Preview */}
+                      <div className="flex-shrink-0 w-20 h-20 rounded-xl border-2 border-border/40 bg-[#071428] overflow-hidden flex items-center justify-center">
+                        {form.logo ? (
+                          <img
+                            src={form.logo}
+                            alt="Preview logo tim"
+                            className="w-full h-full object-contain p-1"
+                            onError={e => { (e.target as HTMLImageElement).src = DEFAULT_LOGO; }}
+                          />
+                        ) : (
+                          <svg className="w-8 h-8 text-muted-foreground/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        )}
+                      </div>
+                      {/* Upload Controls */}
+                      <div className="flex-1 space-y-2">
+                        <label className="flex items-center gap-2 cursor-pointer bg-accent/10 hover:bg-accent/20 border border-accent/30 hover:border-accent/60 text-accent text-xs font-bold uppercase tracking-widest px-4 py-2.5 rounded-lg transition-all w-full justify-center">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                          </svg>
+                          Upload Logo
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={e => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              if (file.size > 2 * 1024 * 1024) {
+                                alert('Ukuran file maksimal 2MB');
+                                return;
+                              }
+                              const reader = new FileReader();
+                              reader.onload = ev => {
+                                const result = ev.target?.result as string;
+                                setForm(f => ({ ...f, logo: result }));
+                              };
+                              reader.readAsDataURL(file);
+                            }}
+                          />
+                        </label>
+                        <p className="text-xs text-muted-foreground/60">PNG, JPG, SVG · Maks 2MB</p>
+                        <div className="relative">
+                          <span className="absolute left-0 top-1/2 -translate-y-1/2 text-xs text-muted-foreground/40 pl-3">atau URL:</span>
+                          <input
+                            type="text"
+                            value={form.logo.startsWith('data:') ? '' : form.logo}
+                            onChange={e => setForm(f => ({ ...f, logo: e.target.value }))}
+                            placeholder="https://..."
+                            className="w-full bg-[#071428] border border-border/50 focus:border-accent rounded-lg pl-16 pr-3 py-2 text-xs text-foreground placeholder:text-muted-foreground/30 outline-none transition-colors"
+                          />
+                        </div>
+                        {form.logo && (
+                          <button
+                            type="button"
+                            onClick={() => setForm(f => ({ ...f, logo: DEFAULT_LOGO }))}
+                            className="text-xs text-muted-foreground/60 hover:text-red-400 transition-colors"
+                          >
+                            × Hapus logo
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
 
                   <div className="sm:col-span-2 flex items-center gap-4 bg-[#071428] rounded-xl px-4 py-3 border border-border/30">
-                    <div
-                      className="w-10 h-10 rounded-lg flex-shrink-0 border border-white/10"
-                      style={{ backgroundColor: form.primaryColor }}
-                    />
+                    <div className="w-12 h-12 rounded-xl flex-shrink-0 border border-white/10 overflow-hidden bg-white/5 flex items-center justify-center">
+                      {form.logo ? (
+                        <img
+                          src={form.logo}
+                          alt="Preview logo"
+                          className="w-full h-full object-contain p-1"
+                          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      ) : (
+                        <div className="w-full h-full" style={{ backgroundColor: form.primaryColor }} />
+                      )}
+                    </div>
                     <div>
                       <div className="font-bold text-sm text-foreground">{form.name || 'Nama Tim'}</div>
-                      <div className="text-xs text-muted-foreground mt-0.5">
-                        <span className="font-mono bg-white/5 px-1.5 py-0.5 rounded mr-2">{form.shortName || 'XXX'}</span>
-                        {form.city || 'Kota'} · Grup {form.group}
+                      <div className="text-xs text-muted-foreground mt-0.5 flex items-center gap-2 flex-wrap">
+                        <span className="font-mono bg-white/5 px-1.5 py-0.5 rounded">{form.shortName || 'XXX'}</span>
+                        {form.abbreviation && form.abbreviation !== form.shortName && (
+                          <span className="font-mono bg-accent/10 text-accent px-1.5 py-0.5 rounded border border-accent/20">{form.abbreviation}</span>
+                        )}
+                        <span>{form.city || 'Kota'} · Grup {form.group}</span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-1.5">
+                        <span className="w-4 h-4 rounded-sm border border-white/20 inline-block" style={{ backgroundColor: form.primaryColor }} title="Warna Utama" />
+                        <span className="w-4 h-4 rounded-sm border border-white/20 inline-block" style={{ backgroundColor: form.secondaryColor }} title="Warna Sekunder" />
+                        <span className="text-xs text-muted-foreground/60">{form.primaryColor} / {form.secondaryColor}</span>
                       </div>
                     </div>
                   </div>
