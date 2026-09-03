@@ -27,7 +27,7 @@ export default function Footer() {
             <Link href="/standings" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider">
               Privasi
             </Link>
-            <Link href="/standings" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider">
+            <Link href="/ketentuan" className="text-[13px] font-semibold text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider">
               Ketentuan
             </Link>
           </nav>
