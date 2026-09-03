@@ -556,7 +556,15 @@ export default function AdminPage() {
     localStorage.removeItem('admin_matches');
     localStorage.removeItem('admin_fixtures');
     setTeams(initialTeams);
-    setMatches(initialMatches);
+    const clearedMatches = initialMatches.map(m => ({
+      ...m,
+      homeScore: null,
+      awayScore: null,
+      status: 'upcoming' as const,
+      homeGoalScorers: '',
+      awayGoalScorers: '',
+    }));
+    setMatches(clearedMatches);
     setFixtures([]);
     setShowResetAllConfirm(false);
     setResetAllStep(0);
