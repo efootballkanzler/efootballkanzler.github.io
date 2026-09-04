@@ -3,11 +3,17 @@
 export interface LeagueGroupConfig {
   groupNames: string[];       // e.g. ['A', 'B', 'C', 'D']
   teamsAdvancePerGroup: number; // e.g. 2
+  numberOfGroups: number;       // e.g. 4
+  teamsPerGroup: number;        // e.g. 4
+  totalTeams: number;           // numberOfGroups × teamsPerGroup
 }
 
 const DEFAULT_CONFIG: LeagueGroupConfig = {
   groupNames: ['A', 'B', 'C', 'D'],
   teamsAdvancePerGroup: 2,
+  numberOfGroups: 4,
+  teamsPerGroup: 4,
+  totalTeams: 16,
 };
 
 /**
@@ -28,10 +34,16 @@ export function getLeagueGroupConfig(): LeagueGroupConfig {
       .filter(Boolean);
 
     const teamsAdvancePerGroup = Math.max(1, parseInt(parsed.teamsAdvancePerGroup, 10) || 2);
+    const numberOfGroups = Math.max(1, parseInt(parsed.numberOfGroups, 10) || 4);
+    const teamsPerGroup = Math.max(1, parseInt(parsed.teamsPerGroup, 10) || 4);
+    const totalTeams = numberOfGroups * teamsPerGroup;
 
     return {
       groupNames: groupNames.length > 0 ? groupNames : DEFAULT_CONFIG.groupNames,
       teamsAdvancePerGroup,
+      numberOfGroups,
+      teamsPerGroup,
+      totalTeams,
     };
   } catch {
     return DEFAULT_CONFIG;

@@ -577,7 +577,7 @@ export default function AdminPage() {
   }
 
   // --- Dashboard stats ---
-  const totalTeams = teams.length;
+  const totalTeams = (parseInt(leagueConfig.numberOfGroups) || 0) * (parseInt(leagueConfig.teamsPerGroup) || 0) || teams.length;
   const totalFixtures = fixtures.length;
   const todayStr = new Date().toISOString().slice(0, 10);
   const scoresUpdatedToday = matches.filter(
