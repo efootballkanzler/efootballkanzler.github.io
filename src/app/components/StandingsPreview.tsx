@@ -1,10 +1,11 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { standings, getTeamById } from '@/data/leagueData';
+import { getLeagueGroupConfig, LEAGUE_CONFIG_EVENT } from '@/lib/leagueConfig';
 
-function GroupMiniTable({ group, label }: { group: string; label: string }) {
-  const groupStandings = standings[group];
-  const top2 = groupStandings.slice(0, 2);
+function GroupMiniTable({ group, label, teamsAdvance }: { group: string; label: string; teamsAdvance: number }) {
+  const groupStandings = standings[group] ?? [];
 
   return (
     <div className="bg-card rounded-2xl border border-border p-6 card-glow">
@@ -17,14 +18,16 @@ function GroupMiniTable({ group, label }: { group: string; label: string }) {
             Grup {label}
           </span>
         </div>
-        <span className="text-[10px] font-black uppercase tracking-widest text-accent">Lolos ↑</span>
+        <span className="text-[10px] font-black uppercase tracking-widest text-accent">
+          Top {teamsAdvance} Lolos ↑
+        </span>
       </div>
 
       <div className="space-y-2">
         {groupStandings.map((s, i) => {
           const team = getTeamById(s.teamId);
           if (!team) return null;
-          const qualified = i < 2;
+          const qualified = i < teamsAdvance;
           return (
             <div
               key={s.teamId}
@@ -60,6 +63,39 @@ function GroupMiniTable({ group, label }: { group: string; label: string }) {
 }
 
 export default function StandingsPreview() {
+  const [groups, setGroups] = useState<string[]>(['A', 'B', 'C', 'D']);
+  const [teamsAdvance, setTeamsAdvance] = useState<number>(2);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setGroups(cfg.groupNames);
+    setTeamsAdvance(cfg.teamsAdvancePerGroup);
+
+    const refresh = () => {
+      const updated = getLeagueGroupConfig();
+      setGroups(updated.groupNames);
+      setTeamsAdvance(updated.teamsAdvancePerGroup);
+    };
+
+    // same-tab updates (admin panel in same browser tab)
+    window.addEventListener(LEAGUE_CONFIG_EVENT, refresh);
+    // cross-tab updates
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'admin_league_config') refresh();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener(LEAGUE_CONFIG_EVENT, refresh);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
+  // Determine grid columns class based on number of groups
+  const gridCols =
+    groups.length === 1 ? 'grid-cols-1' :
+    groups.length === 2 ? 'grid-cols-1 sm:grid-cols-2' :
+    groups.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3': 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4';
+
   return (
     <section className="py-24 bg-background relative">
       <div className="max-w-7xl mx-auto px-6">
@@ -73,7 +109,7 @@ export default function StandingsPreview() {
           </div>
           <div className="space-y-3 max-w-xs">
             <p className="text-muted-foreground text-base leading-relaxed">
-              Top 2 dari setiap grup melaju ke fase 16 besar. 8 tim terbaik runner-up juga bisa lolos.
+              Top {teamsAdvance} dari setiap grup melaju ke fase knock out.
             </p>
             <Link
               href="/standings"
@@ -85,11 +121,10 @@ export default function StandingsPreview() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <GroupMiniTable group="A" label="A" />
-          <GroupMiniTable group="B" label="B" />
-          <GroupMiniTable group="C" label="C" />
-          <GroupMiniTable group="D" label="D" />
+        <div className={`grid ${gridCols} gap-6`}>
+          {groups.map((g) => (
+            <GroupMiniTable key={g} group={g} label={g} teamsAdvance={teamsAdvance} />
+          ))}
         </div>
       </div>
     </section>

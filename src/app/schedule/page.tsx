@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Jadwal & Hasil — Kanzler eFootball League',
-  description: 'Jadwal lengkap dan hasil pertandingan Kanzler eFootball League, termasuk fase grup dan 16 besar.',
+  description: 'Jadwal lengkap dan hasil pertandingan Kanzler eFootball League, termasuk fase grup dan fase knock out.',
 };
 
 export default function SchedulePage() {
@@ -29,7 +29,7 @@ export default function SchedulePage() {
                 <span className="text-gradient-gold">Hasil Laga</span>
               </h1>
               <p className="text-muted-foreground text-base mt-4 max-w-md leading-relaxed">
-                Seluruh jadwal dan hasil pertandingan fase grup dan 16 besar. Filter berdasarkan status atau babak.
+                Seluruh jadwal dan hasil pertandingan fase grup dan fase knock out. Filter berdasarkan status atau babak.
               </p>
             </div>
           </div>

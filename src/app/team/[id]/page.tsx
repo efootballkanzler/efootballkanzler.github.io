@@ -12,6 +12,7 @@ import {
   type Team,
   type Player,
 } from '@/data/leagueData';
+import TeamCompareView from './components/TeamCompareView';
 
 const positionOrder: Record<string, number> = { GK: 0, CB: 1, LB: 2, RB: 3, CDM: 4, CM: 5, CAM: 6, LW: 7, RW: 8, ST: 9 };
 const positionColor: Record<string, string> = {
@@ -41,7 +42,7 @@ export default function TeamPage() {
   const params = useParams();
   const teamId = params?.id as string;
   const team = getTeamById(teamId);
-  const [activeTab, setActiveTab] = useState<'roster' | 'matches' | 'stats' | 'h2h' | 'lineup'>('roster');
+  const [activeTab, setActiveTab] = useState<'roster' | 'matches' | 'stats' | 'h2h' | 'lineup' | 'compare'>('roster');
 
   if (!team) {
     return (
@@ -101,6 +102,7 @@ export default function TeamPage() {
     { key: 'stats', label: 'Statistik' },
     { key: 'h2h', label: 'Head-to-Head' },
     { key: 'lineup', label: 'Lineup' },
+    { key: 'compare', label: 'Bandingkan' },
   ] as const;
 
   return (
@@ -273,7 +275,7 @@ export default function TeamPage() {
                                 {oppScore}
                               </p>
                               <p className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
-                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? '16 Besar' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
+                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? 'Knock Out' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
                               </p>
                             </div>
                           </div>
@@ -326,7 +328,7 @@ export default function TeamPage() {
                             </div>
                             <div className="text-right shrink-0">
                               <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-black uppercase tracking-wide">
-                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? '16 Besar' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
+                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? 'Knock Out' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
                               </span>
                               <p className="text-[10px] text-muted-foreground mt-1">
                                 {isHome ? 'Kandang' : 'Tandang'}
@@ -506,7 +508,7 @@ export default function TeamPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-black text-foreground">{myScore}–{oppScore}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase">{m.stage === 'group' ? `Grup ${m.group}` : '16 Besar'}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase">{m.stage === 'group' ? `Grup ${m.group}` : 'Knock Out'}</p>
                       </div>
                     </div>
                   );
@@ -589,6 +591,11 @@ export default function TeamPage() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* ── COMPARE TAB ── */}
+          {activeTab === 'compare' && (
+            <TeamCompareView team={team} />
           )}
         </div>
       </main>

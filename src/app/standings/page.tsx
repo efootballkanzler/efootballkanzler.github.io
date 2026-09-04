@@ -1,15 +1,20 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GroupTable from '@/app/standings/components/GroupTable';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Klasemen Grup — Kanzler eFootball League',
-  description: 'Lihat klasemen lengkap semua grup Kanzler eFootball League: poin, menang, kalah, dan selisih gol setiap tim.',
-};
+import { getLeagueGroupConfig } from '@/lib/leagueConfig';
 
 export default function StandingsPage() {
+  const [teamsAdvance, setTeamsAdvance] = useState(2);
+  const [totalTeams, setTotalTeams] = useState(16);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setTeamsAdvance(cfg?.teamsAdvancePerGroup);
+    setTotalTeams(cfg?.totalTeams);
+  }, []);
+
   return (
     <>
       <Header />
@@ -28,7 +33,7 @@ export default function StandingsPage() {
                 <span className="text-gradient-gold">Liga</span>
               </h1>
               <p className="text-muted-foreground text-base mt-4 max-w-md leading-relaxed">
-                Top 2 dari setiap grup otomatis lolos ke 16 besar. Gunakan filter untuk melihat klasemen per grup.
+                Top {teamsAdvance} dari setiap grup otomatis lolos ke fase knock out. Total {totalTeams} tim berpartisipasi di fase grup.
               </p>
             </div>
           </div>

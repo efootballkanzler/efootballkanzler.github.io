@@ -1,8 +1,35 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import AppImage from '@/components/ui/AppImage';
+import { getLeagueGroupConfig, LEAGUE_CONFIG_EVENT } from '@/lib/leagueConfig';
 
 export default function HeroSection() {
+  const [totalTeams, setTotalTeams] = useState(16);
+  const [numberOfGroups, setNumberOfGroups] = useState(4);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setTotalTeams(cfg.totalTeams);
+    setNumberOfGroups(cfg.numberOfGroups);
+
+    const refresh = () => {
+      const updated = getLeagueGroupConfig();
+      setTotalTeams(updated.totalTeams);
+      setNumberOfGroups(updated.numberOfGroups);
+    };
+
+    window.addEventListener(LEAGUE_CONFIG_EVENT, refresh);
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'admin_league_config') refresh();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener(LEAGUE_CONFIG_EVENT, refresh);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
+
   return (
     <section className="relative min-h-screen flex items-end pb-20 overflow-hidden noise-overlay">
       {/* Background Image */}
@@ -34,7 +61,7 @@ export default function HeroSection() {
               Musim 2026
             </span>
             <span className="text-muted-foreground text-[11px] font-black uppercase tracking-widest">
-              Fase 16 Besar Dimulai
+              Fase Knock Out Dimulai
             </span>
           </div>
 
@@ -45,7 +72,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-lg text-foreground/60 max-w-md leading-relaxed font-medium">
-            Klasemen grup, bracket 16 besar, jadwal lengkap, dan profil tim — semua dalam satu tempat.
+            Klasemen grup, bracket fase knock out, jadwal lengkap, dan profil tim — semua dalam satu tempat.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">
@@ -67,11 +94,11 @@ export default function HeroSection() {
           {/* Stats Row */}
           <div className="flex flex-wrap gap-8 pt-6 border-t border-border/50">
             <div>
-              <p className="text-3xl font-black text-foreground">16</p>
-              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Tim Tersisa</p>
+              <p className="text-3xl font-black text-foreground">{totalTeams}</p>
+              <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Total Tim</p>
             </div>
             <div>
-              <p className="text-3xl font-black text-foreground">4</p>
+              <p className="text-3xl font-black text-foreground">{numberOfGroups}</p>
               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">Grup Aktif</p>
             </div>
             <div>
@@ -85,6 +112,6 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }

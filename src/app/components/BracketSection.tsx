@@ -1,6 +1,8 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { matches, getTeamById } from '@/data/leagueData';
+import { getLeagueGroupConfig, LEAGUE_CONFIG_EVENT } from '@/lib/leagueConfig';
 
 function BracketMatch({ matchId }: { matchId: string }) {
   const match = matches.find((m) => m.id === matchId);
@@ -27,7 +29,7 @@ function BracketMatch({ matchId }: { matchId: string }) {
         {match.status === 'completed' && (
           <span className="text-[9px] font-black uppercase tracking-widest text-accent">Selesai</span>
         )}
-        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">16 Besar</span>
+        <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">Knock Out</span>
       </div>
 
       <div className="px-4 py-3 space-y-2">
@@ -54,6 +56,27 @@ function BracketMatch({ matchId }: { matchId: string }) {
 
 export default function BracketSection() {
   const r16Matches = matches.filter((m) => m.stage === 'r16');
+  const [totalTeams, setTotalTeams] = useState(16);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setTotalTeams(cfg.totalTeams);
+
+    const refresh = () => {
+      const updated = getLeagueGroupConfig();
+      setTotalTeams(updated.totalTeams);
+    };
+
+    window.addEventListener(LEAGUE_CONFIG_EVENT, refresh);
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'admin_league_config') refresh();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener(LEAGUE_CONFIG_EVENT, refresh);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -66,12 +89,12 @@ export default function BracketSection() {
             <span className="section-num">02/</span>
             <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter leading-none text-foreground">
               Fase<br />
-              <span className="text-gradient-gold">16 Besar</span>
+              <span className="text-gradient-gold">Knock Out</span>
             </h2>
           </div>
           <div className="space-y-3">
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs">
-              Babak gugur dimulai. 16 tim terbaik bertarung menuju puncak.
+              Babak gugur dimulai. {totalTeams} tim terbaik bertarung menuju puncak.
             </p>
             <Link
               href="/schedule"
@@ -96,7 +119,7 @@ export default function BracketSection() {
           <div className="relative z-10 space-y-3">
             <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Babak Selanjutnya</p>
             <p className="text-2xl font-black uppercase tracking-tight text-foreground/30">Perempat Final</p>
-            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Menunggu hasil 16 besar</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Menunggu hasil fase knock out</p>
           </div>
         </div>
       </div>

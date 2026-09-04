@@ -6,8 +6,7 @@ import {
 } from 'recharts';
 
 import { teams as initialTeams, matches as initialMatches, standings as initialStandings, Team, Match } from '@/data/leagueData';
-
-const GROUPS = ['A', 'B', 'C', 'D'];
+import { dispatchLeagueConfigUpdate } from '@/lib/leagueConfig';
 
 const DEFAULT_LOGO = 'https://images.unsplash.com/photo-1614632537190-23e4e2f61f63?w=80&h=80&fit=crop&crop=center';
 
@@ -106,7 +105,7 @@ const STATUS_COLORS: Record<MatchStatus, string> = {
 
 const STAGE_LABELS: Record<string, string> = {
   group: 'Fase Grup',
-  r16: '16 Besar',
+  r16: 'Knock Out',
   qf: 'Perempat Final',
   sf: 'Semi Final',
   final: 'Final',
@@ -114,7 +113,7 @@ const STAGE_LABELS: Record<string, string> = {
 
 const STAGE_OPTIONS = [
   { value: 'group', label: 'Fase Grup' },
-  { value: 'r16', label: '16 Besar' },
+  { value: 'r16', label: 'Knock Out' },
   { value: 'qf', label: 'Perempat Final' },
   { value: 'sf', label: 'Semi Final' },
   { value: 'final', label: 'Final' },
@@ -218,6 +217,48 @@ export default function AdminPage() {
   function handleConfigSave(e: React.FormEvent) {
     e.preventDefault();
     localStorage.setItem('admin_league_config', JSON.stringify(leagueConfig));
+    dispatchLeagueConfigUpdate();
+
+    // Auto-generate placeholder teams based on group structure config
+    const configGroups = (leagueConfig.groupNames || 'A, B, C, D')
+      .split(',')
+      .map((g: string) => g.trim())
+      .filter(Boolean);
+    const configTeamsPerGroup = Math.max(1, parseInt(leagueConfig.teamsPerGroup, 10) || 4);
+
+    setTeams(prevTeams => {
+      let updated = [...prevTeams];
+      let changed = false;
+
+      configGroups.forEach(grp => {
+        const existingInGroup = updated.filter(t => t.group === grp);
+        const needed = configTeamsPerGroup - existingInGroup.length;
+        if (needed > 0) {
+          for (let i = 0; i < needed; i++) {
+            const slotNum = existingInGroup.length + i + 1;
+            const newId = `team-${grp.toLowerCase()}-${slotNum}-${Date.now()}-${i}`;
+            updated.push({
+              id: newId,
+              name: `Tim ${grp}${slotNum}`,
+              shortName: `${grp}${slotNum}`,
+              logo: DEFAULT_LOGO,
+              city: '-',
+              group: grp,
+              colors: { primary: '#003366', secondary: '#FFFFFF' },
+              players: [],
+            });
+            changed = true;
+          }
+        }
+      });
+
+      if (changed) {
+        localStorage.setItem('admin_teams', JSON.stringify(updated));
+        return updated;
+      }
+      return prevTeams;
+    });
+
     setConfigSaved(true);
     setConfigDirty(false);
     setTimeout(() => setConfigSaved(false), 2500);
@@ -226,6 +267,7 @@ export default function AdminPage() {
   function handleConfigReset() {
     setLeagueConfig(defaultConfig);
     localStorage.removeItem('admin_league_config');
+    dispatchLeagueConfigUpdate();
     setConfigDirty(false);
     setConfigSaved(true);
     setTimeout(() => setConfigSaved(false), 2500);
@@ -577,7 +619,7 @@ export default function AdminPage() {
   }
 
   // --- Dashboard stats ---
-  const totalTeams = teams.length;
+  const totalTeams = (parseInt(leagueConfig.numberOfGroups) || 0) * (parseInt(leagueConfig.teamsPerGroup) || 0) || teams.length;
   const totalFixtures = fixtures.length;
   const todayStr = new Date().toISOString().slice(0, 10);
   const scoresUpdatedToday = matches.filter(
@@ -1023,30 +1065,67 @@ export default function AdminPage() {
         {/* ===== TEAMS TAB ===== */}
         {activeTab === 'teams' && (
           <>
+            {/* Config structure summary banner */}
+            {(() => {
+              const dynGroups = (leagueConfig.groupNames || 'A, B, C, D')
+                .split(',').map((g: string) => g.trim()).filter(Boolean);
+              const tpg = Math.max(1, parseInt(leagueConfig.teamsPerGroup, 10) || 4);
+              const totalCfg = dynGroups.length * tpg;
+              const allFull = dynGroups.every(g => teams.filter(t => t.group === g).length >= tpg);
+              return (
+                <div className={`mb-4 rounded-xl px-5 py-3 text-sm border flex flex-wrap items-center gap-x-4 gap-y-1 ${allFull ? 'bg-green-500/10 border-green-500/30 text-green-300' : 'bg-blue-500/10 border-blue-500/30 text-blue-300'}`}>
+                  <span>
+                    <strong>Struktur:</strong> {dynGroups.length} grup × {tpg} tim = <strong>{totalCfg} tim</strong>
+                  </span>
+                  <span className="text-white/30">·</span>
+                  <span>Terdaftar: <strong className="text-white">{teams.length}</strong></span>
+                  {!allFull && (
+                    <span className="text-yellow-300 text-xs ml-auto">⚠ Simpan konfigurasi untuk otomatis menambah slot tim yang kurang</span>
+                  )}
+                  {allFull && <span className="text-xs text-green-400 ml-auto">✓ Semua slot terisi</span>}
+                </div>
+              );
+            })()}
+
             <div className="mb-6 bg-accent/10 border border-accent/30 rounded-xl px-5 py-3 text-sm text-accent/90">
               <strong>Catatan:</strong> Perubahan disimpan di browser (localStorage). Data ini digunakan untuk tampilan di halaman Klasemen dan Tim.
             </div>
 
+            {(() => {
+              const dynGroups = (leagueConfig.groupNames || 'A, B, C, D')
+                .split(',').map((g: string) => g.trim()).filter(Boolean);
+              const tpg = Math.max(1, parseInt(leagueConfig.teamsPerGroup, 10) || 4);
+              const validGroup = dynGroups.includes(activeGroup) ? activeGroup : (dynGroups[0] || 'A');
+              const currentGroupTeams = teams.filter(t => t.group === validGroup);
+              return (
+                <>
             <div className="flex flex-wrap gap-2 mb-6">
-              {GROUPS.map(g => (
-                <button
-                  key={g}
-                  onClick={() => { setActiveGroup(g); setShowForm(false); }}
-                  className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
-                    activeGroup === g
-                      ? 'bg-accent text-accent-foreground'
-                      : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
-                  }`}
-                >
-                  Grup {g}
-                </button>
-              ))}
+              {dynGroups.map(g => {
+                const cnt = teams.filter(t => t.group === g).length;
+                const full = cnt >= tpg;
+                return (
+                  <button
+                    key={g}
+                    onClick={() => { setActiveGroup(g); setShowForm(false); }}
+                    className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all flex items-center gap-1.5 ${
+                      validGroup === g
+                        ? 'bg-accent text-accent-foreground'
+                        : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
+                    }`}
+                  >
+                    Grup {g}
+                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded-full ${full ? 'bg-green-500/25 text-green-400' : 'bg-yellow-500/20 text-yellow-400'}`}>
+                      {cnt}/{tpg}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
 
             <div className="bg-[#0D2137] rounded-2xl border border-border/40 overflow-hidden mb-4">
               <div className="px-4 sm:px-5 py-4 border-b border-border/30 flex items-center justify-between gap-3">
                 <span className="text-sm font-bold text-muted-foreground uppercase tracking-widest">
-                  {groupTeams.length} Tim · Grup {activeGroup}
+                  {currentGroupTeams.length}/{tpg} Tim · Grup {validGroup}
                 </span>
                 <button
                   onClick={openAdd}
@@ -1056,13 +1135,13 @@ export default function AdminPage() {
                 </button>
               </div>
 
-              {groupTeams.length === 0 ? (
+              {currentGroupTeams.length === 0 ? (
                 <div className="px-5 py-12 text-center text-muted-foreground text-sm">
-                  Belum ada tim di Grup {activeGroup}. Klik "Tambah Tim" untuk menambahkan.
+                  Belum ada tim di Grup {validGroup}. Klik "Tambah Tim" untuk menambahkan.
                 </div>
               ) : (
                 <div className="divide-y divide-border/20">
-                  {groupTeams.map(team => (
+                  {currentGroupTeams.map(team => (
                     <div key={team.id} className="flex items-center gap-3 px-4 sm:px-5 py-4 hover:bg-white/5 transition-colors">
                       <div
                         className="w-8 h-8 rounded-lg flex-shrink-0 border border-white/10"
@@ -1195,9 +1274,13 @@ export default function AdminPage() {
                       onChange={e => setForm(f => ({ ...f, group: e.target.value }))}
                       className="w-full bg-[#071428] border border-border/50 focus:border-accent rounded-lg px-4 py-2.5 text-sm text-foreground outline-none transition-colors"
                     >
-                      {GROUPS.map(g => (
-                        <option key={g} value={g}>Grup {g}</option>
-                      ))}
+                      {(leagueConfig.groupNames || 'A, B, C, D')
+                        .split(',')
+                        .map((g: string) => g.trim())
+                        .filter(Boolean)
+                        .map(g => (
+                          <option key={g} value={g}>Grup {g}</option>
+                        ))}
                     </select>
                   </div>
 
@@ -1361,6 +1444,9 @@ export default function AdminPage() {
                 </form>
               </div>
             )}
+                </>
+              );
+            })()}
           </>
         )}
 
@@ -1582,23 +1668,27 @@ export default function AdminPage() {
 
             {/* Group Tabs */}
             <div className="flex flex-wrap gap-2 mb-6">
-              {GROUPS.map(g => (
-                <button
-                  key={g}
-                  onClick={() => {
-                    setActiveFixtureGroup(g);
-                    setShowFixtureForm(false);
-                    setEditingFixtureId(null);
-                  }}
-                  className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
-                    activeFixtureGroup === g
-                      ? 'bg-accent text-accent-foreground'
-                      : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
-                  }`}
-                >
-                  Grup {g}
-                </button>
-              ))}
+              {(leagueConfig.groupNames || 'A, B, C, D')
+                .split(',')
+                .map((g: string) => g.trim())
+                .filter(Boolean)
+                .map(g => (
+                  <button
+                    key={g}
+                    onClick={() => {
+                      setActiveFixtureGroup(g);
+                      setShowFixtureForm(false);
+                      setEditingFixtureId(null);
+                    }}
+                    className={`px-4 py-2 rounded-lg text-sm font-black uppercase tracking-widest transition-all ${
+                      activeFixtureGroup === g
+                        ? 'bg-accent text-accent-foreground'
+                        : 'bg-[#0D2137] text-muted-foreground hover:text-foreground border border-border/40'
+                    }`}
+                  >
+                    Grup {g}
+                  </button>
+                ))}
             </div>
 
             {/* Fixture List */}
@@ -1987,7 +2077,10 @@ export default function AdminPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Tim Lolos per Grup</label>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                    Tim Lolos per Grup
+                    <span className="ml-1.5 text-blue-400 text-[10px] font-semibold">(↔ klasemen)</span>
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -2054,6 +2147,21 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
+              {/* Total Teams Calculation */}
+              <div className="mt-4 flex items-center gap-3 bg-green-500/5 border border-green-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <p className="text-xs text-green-300 leading-relaxed">
+                  <span className="font-semibold">Total Tim: </span>
+                  <span className="text-green-400 font-black text-sm">
+                    {(parseInt(leagueConfig.numberOfGroups) || 0) * (parseInt(leagueConfig.teamsPerGroup) || 0)}
+                  </span>
+                  <span className="text-gray-400 ml-1">
+                    ({leagueConfig.numberOfGroups || 0} grup × {leagueConfig.teamsPerGroup || 0} tim per grup)
+                  </span>
+                </p>
+              </div>
               {/* Group preview */}
               {leagueConfig.groupNames && (
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -2064,6 +2172,17 @@ export default function AdminPage() {
                   ))}
                 </div>
               )}
+              {/* Live impact notice */}
+              <div className="mt-4 flex items-start gap-2.5 bg-blue-500/5 border border-blue-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-xs text-blue-300 leading-relaxed">
+                  <span className="font-semibold">Sinkron otomatis:</span> Setelah disimpan, jumlah grup, nama grup, dan jumlah tim lolos per grup akan langsung tercermin di{' '}
+                  <span className="font-semibold">tabel klasemen beranda</span> dan{' '}
+                  <span className="font-semibold">halaman klasemen</span> — termasuk sorotan tim yang lolos.
+                </p>
+              </div>
             </div>
 
             {/* Section 4: Regulasi Pertandingan */}

@@ -8,7 +8,7 @@ const navLinks = [
   { label: 'Beranda', href: '/' },
   { label: 'Klasemen', href: '/standings' },
   { label: 'Jadwal', href: '/schedule' },
-  { label: '16 Besar', href: '/r16' },
+  { label: 'Knock Out', href: '/r16' },
   { label: 'Tim', href: '/teams' },
   { label: 'Admin', href: '/admin' },
 ];

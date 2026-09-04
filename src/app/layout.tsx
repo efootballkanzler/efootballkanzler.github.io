@@ -21,7 +21,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
   title: 'Kanzler eFootball League',
-  description: 'Ikuti klasemen, jadwal, bracket 16 besar, dan profil tim Kanzler eFootball League terlengkap.',
+  description: 'Ikuti klasemen, jadwal, bracket fase knock out, dan profil tim Kanzler eFootball League terlengkap.',
   icons: {
     icon: [{ url: '/favicon.ico', type: 'image/x-icon' }],
   },
@@ -32,9 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="id" className={plusJakartaSans.variable}>
       <head>
         <link rel="stylesheet" href="/styles/tailwind.css" />
-      
-      <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fleaguesite7195back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.20" />
-      <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.3" /></head>
+
+        <script type="module" async src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fleaguesite7195back.builtwithrocket.new&_be=https%3A%2F%2Fappanalytics.rocket.new&_v=0.1.20" />
+        <script type="module" defer src="https://static.rocket.new/rocket-shot.js?v=0.0.3" /></head>
       <body className={plusJakartaSans.className}>
         {children}
       </body>
