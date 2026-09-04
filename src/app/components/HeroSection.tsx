@@ -34,7 +34,7 @@ export default function HeroSection() {
               Musim 2026
             </span>
             <span className="text-muted-foreground text-[11px] font-black uppercase tracking-widest">
-              Fase 16 Besar Dimulai
+              Fase Knock Out Dimulai
             </span>
           </div>
 
@@ -45,7 +45,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="text-lg text-foreground/60 max-w-md leading-relaxed font-medium">
-            Klasemen grup, bracket 16 besar, jadwal lengkap, dan profil tim — semua dalam satu tempat.
+            Klasemen grup, bracket fase knock out, jadwal lengkap, dan profil tim — semua dalam satu tempat.
           </p>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 pt-2">

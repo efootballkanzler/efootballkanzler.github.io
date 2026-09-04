@@ -73,7 +73,7 @@ export default function StandingsPreview() {
           </div>
           <div className="space-y-3 max-w-xs">
             <p className="text-muted-foreground text-base leading-relaxed">
-              Top 2 dari setiap grup melaju ke fase 16 besar. 8 tim terbaik runner-up juga bisa lolos.
+              Top 2 dari setiap grup melaju ke fase knock out. 8 tim terbaik runner-up juga bisa lolos.
             </p>
             <Link
               href="/standings"

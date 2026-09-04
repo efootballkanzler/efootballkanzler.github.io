@@ -37,12 +37,12 @@ export default function BracketDraw() {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-[12px] font-black uppercase tracking-widest text-foreground">Bagan 16 Besar</h3>
+      <h3 className="text-[12px] font-black uppercase tracking-widest text-foreground">Bagan Fase Knock Out</h3>
 
       <div className="bg-card border border-border rounded-2xl p-6">
         {/* R16 Section */}
         <div className="space-y-4">
-          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 mb-3">16 Besar</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/50 mb-3">Knock Out</p>
           <div className="space-y-3">
             {r16Matches.map((m) => (
               <BracketMatchCard key={m.id} matchId={m.id} />

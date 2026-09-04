@@ -20,7 +20,7 @@ export default function TopScorersSection() {
               <span className="text-gradient-gold">Pencetak Gol</span>
             </h2>
             <p className="text-muted-foreground text-base leading-relaxed">
-              Pemain dengan gol terbanyak di fase grup. Siapa yang akan terus mencetak gol di 16 besar?
+              Pemain dengan gol terbanyak di fase grup. Siapa yang akan terus mencetak gol di fase knock out?
             </p>
             {/* Featured top scorer */}
             <div className="bg-card border border-accent/20 rounded-2xl p-8 card-glow relative overflow-hidden">

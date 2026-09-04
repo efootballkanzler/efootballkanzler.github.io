@@ -139,10 +139,10 @@ export default function R16Page() {
                   Beranda
                 </Link>
                 <span className="text-muted-foreground/30 text-[10px]">/</span>
-                <span className="text-[10px] font-black uppercase tracking-widest text-accent">16 Besar</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-accent">Knock Out</span>
               </div>
               <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none text-foreground">
-                Fase <span className="text-gradient-gold">16 Besar</span>
+                Fase <span className="text-gradient-gold">Knock Out</span>
               </h1>
               <p className="text-muted-foreground text-sm max-w-md">
                 Babak gugur — 16 tim terbaik dari fase grup bertarung menuju perempat final.
@@ -202,7 +202,7 @@ export default function R16Page() {
                 {/* Section label */}
                 <div className="flex items-center gap-3 mb-6">
                   <div className="h-px flex-1 bg-border"></div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground px-3">Babak 16 Besar → Perempat Final</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground px-3">Babak Knock Out → Perempat Final</span>
                   <div className="h-px flex-1 bg-border"></div>
                 </div>
 
@@ -211,7 +211,7 @@ export default function R16Page() {
 
                   {/* ── Column 1: R16 Top Half (matches 1-4) ── */}
                   <div className="flex flex-col gap-3 w-[200px] flex-shrink-0">
-                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 text-center mb-1">16 Besar</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 text-center mb-1">Knock Out</div>
                     {topHalf.map((match, i) => (
                       <div key={match.id} className="flex-1 flex flex-col justify-center" style={{ minHeight: '110px' }}>
                         <BracketMatchCard match={match} index={i} />
@@ -307,7 +307,7 @@ export default function R16Page() {
 
                   {/* ── Column 1b: R16 Bottom Half (matches 5-8) ── */}
                   <div className="flex flex-col gap-3 w-[200px] flex-shrink-0">
-                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 text-center mb-1">16 Besar</div>
+                    <div className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/50 text-center mb-1">Knock Out</div>
                     {bottomHalf.map((match, i) => (
                       <div key={match.id} className="flex-1 flex flex-col justify-center" style={{ minHeight: '110px' }}>
                         <BracketMatchCard match={match} index={i + 4} />

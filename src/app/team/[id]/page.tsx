@@ -273,7 +273,7 @@ export default function TeamPage() {
                                 {oppScore}
                               </p>
                               <p className="text-[10px] text-muted-foreground uppercase tracking-wide mt-1">
-                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? '16 Besar' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
+                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? 'Knock Out' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
                               </p>
                             </div>
                           </div>
@@ -326,7 +326,7 @@ export default function TeamPage() {
                             </div>
                             <div className="text-right shrink-0">
                               <span className="px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-accent text-[10px] font-black uppercase tracking-wide">
-                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? '16 Besar' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
+                                {m.stage === 'group' ? `Grup ${m.group}` : m.stage === 'r16' ? 'Knock Out' : m.stage === 'qf' ? 'Perempat Final' : m.stage === 'sf' ? 'Semi Final' : 'Final'}
                               </span>
                               <p className="text-[10px] text-muted-foreground mt-1">
                                 {isHome ? 'Kandang' : 'Tandang'}
@@ -506,7 +506,7 @@ export default function TeamPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-black text-foreground">{myScore}–{oppScore}</p>
-                        <p className="text-[10px] text-muted-foreground uppercase">{m.stage === 'group' ? `Grup ${m.group}` : '16 Besar'}</p>
+                        <p className="text-[10px] text-muted-foreground uppercase">{m.stage === 'group' ? `Grup ${m.group}` : 'Knock Out'}</p>
                       </div>
                     </div>
                   );

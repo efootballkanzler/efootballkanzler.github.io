@@ -28,7 +28,7 @@ export default function StandingsPage() {
                 <span className="text-gradient-gold">Liga</span>
               </h1>
               <p className="text-muted-foreground text-base mt-4 max-w-md leading-relaxed">
-                Top 2 dari setiap grup otomatis lolos ke 16 besar. Gunakan filter untuk melihat klasemen per grup.
+                Top 2 dari setiap grup otomatis lolos ke fase knock out. Gunakan filter untuk melihat klasemen per grup.
               </p>
             </div>
           </div>

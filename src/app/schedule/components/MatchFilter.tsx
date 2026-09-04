@@ -141,7 +141,7 @@ function MatchCard({
       <div className="flex items-center justify-between px-6 py-3 border-b border-border/50 bg-primary/30">
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            {match.stage === 'r16' ? '16 Besar' : `Grup ${match.group}`}
+            {match.stage === 'r16' ? 'Knock Out' : `Grup ${match.group}`}
           </span>
           {match.status === 'live' && (
             <span className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-red-400">
@@ -327,7 +327,7 @@ export default function MatchFilter() {
     { key: 'all', label: 'Semua' },
     { key: 'upcoming', label: 'Akan Datang' },
     { key: 'completed', label: 'Selesai' },
-    { key: 'r16', label: '16 Besar' },
+    { key: 'r16', label: 'Knock Out' },
     { key: 'group', label: 'Fase Grup' },
   ];
 

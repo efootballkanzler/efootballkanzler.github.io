@@ -106,7 +106,7 @@ const STATUS_COLORS: Record<MatchStatus, string> = {
 
 const STAGE_LABELS: Record<string, string> = {
   group: 'Fase Grup',
-  r16: '16 Besar',
+  r16: 'Knock Out',
   qf: 'Perempat Final',
   sf: 'Semi Final',
   final: 'Final',
@@ -114,7 +114,7 @@ const STAGE_LABELS: Record<string, string> = {
 
 const STAGE_OPTIONS = [
   { value: 'group', label: 'Fase Grup' },
-  { value: 'r16', label: '16 Besar' },
+  { value: 'r16', label: 'Knock Out' },
   { value: 'qf', label: 'Perempat Final' },
   { value: 'sf', label: 'Semi Final' },
   { value: 'final', label: 'Final' },

@@ -40,7 +40,7 @@ export default function RecentMatches() {
                 <div key={match?.id} className="bg-card border border-border rounded-2xl p-5 match-card-hover">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      {match?.stage === 'group' ? `Grup ${match?.group} — MD ${match?.matchDay}` : '16 Besar'}
+                      {match?.stage === 'group' ? `Grup ${match?.group} — MD ${match?.matchDay}` : 'Knock Out'}
                     </span>
                     <span className="text-[10px] font-black uppercase tracking-widest text-accent">Selesai</span>
                   </div>
@@ -77,7 +77,7 @@ export default function RecentMatches() {
                       {match?.date?.split('-')?.reverse()?.join('/')} — {match?.time}
                     </span>
                     <span className="text-[10px] font-black uppercase tracking-widest text-accent/70">
-                      {match?.stage === 'r16' ? '16 Besar' : `Grup ${match?.group}`}
+                      {match?.stage === 'r16' ? 'Knock Out' : `Grup ${match?.group}`}
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-4">
