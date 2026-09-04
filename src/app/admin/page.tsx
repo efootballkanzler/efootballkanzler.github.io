@@ -2057,6 +2057,21 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
+              {/* Total Teams Calculation */}
+              <div className="mt-4 flex items-center gap-3 bg-green-500/5 border border-green-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <p className="text-xs text-green-300 leading-relaxed">
+                  <span className="font-semibold">Total Tim: </span>
+                  <span className="text-green-400 font-black text-sm">
+                    {(parseInt(leagueConfig.numberOfGroups) || 0) * (parseInt(leagueConfig.teamsPerGroup) || 0)}
+                  </span>
+                  <span className="text-gray-400 ml-1">
+                    ({leagueConfig.numberOfGroups || 0} grup × {leagueConfig.teamsPerGroup || 0} tim per grup)
+                  </span>
+                </p>
+              </div>
               {/* Group preview */}
               {leagueConfig.groupNames && (
                 <div className="mt-4 flex flex-wrap gap-2">
