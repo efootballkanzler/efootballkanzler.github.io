@@ -12,6 +12,7 @@ import {
   type Team,
   type Player,
 } from '@/data/leagueData';
+import TeamCompareView from './components/TeamCompareView';
 
 const positionOrder: Record<string, number> = { GK: 0, CB: 1, LB: 2, RB: 3, CDM: 4, CM: 5, CAM: 6, LW: 7, RW: 8, ST: 9 };
 const positionColor: Record<string, string> = {
@@ -41,7 +42,7 @@ export default function TeamPage() {
   const params = useParams();
   const teamId = params?.id as string;
   const team = getTeamById(teamId);
-  const [activeTab, setActiveTab] = useState<'roster' | 'matches' | 'stats' | 'h2h' | 'lineup'>('roster');
+  const [activeTab, setActiveTab] = useState<'roster' | 'matches' | 'stats' | 'h2h' | 'lineup' | 'compare'>('roster');
 
   if (!team) {
     return (
@@ -101,6 +102,7 @@ export default function TeamPage() {
     { key: 'stats', label: 'Statistik' },
     { key: 'h2h', label: 'Head-to-Head' },
     { key: 'lineup', label: 'Lineup' },
+    { key: 'compare', label: 'Bandingkan' },
   ] as const;
 
   return (
@@ -589,6 +591,11 @@ export default function TeamPage() {
                 </div>
               </div>
             </div>
+          )}
+
+          {/* ── COMPARE TAB ── */}
+          {activeTab === 'compare' && (
+            <TeamCompareView team={team} />
           )}
         </div>
       </main>
