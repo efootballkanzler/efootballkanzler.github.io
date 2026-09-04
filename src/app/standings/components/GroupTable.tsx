@@ -2,8 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { standings, getTeamById } from '@/data/leagueData';
-
-const groups = ['A', 'B', 'C', 'D'];
+import { getLeagueGroupConfig } from '@/lib/leagueConfig';
 
 const ROW_HEIGHT = 48; // px per standings row
 const OVERSCAN = 2;
@@ -31,20 +30,18 @@ function useVirtualRows<T>(items: T[], rowHeight: number, containerHeight: numbe
   return { scrollRef, startIndex, endIndex, totalHeight };
 }
 
-function FullGroupTable({ group }: { group: string }) {
-  const data = standings[group];
-  // For small datasets (≤ 20 rows), render all rows directly without virtual scroll overhead
+function FullGroupTable({ group, teamsAdvance }: { group: string; teamsAdvance: number }) {
+  const data = standings[group] ?? [];
   const VIRTUAL_THRESHOLD = 20;
   const shouldVirtualize = data.length > VIRTUAL_THRESHOLD;
 
-  // Always call hooks unconditionally
   const containerHeight = data.length * ROW_HEIGHT;
   const { scrollRef, startIndex, endIndex, totalHeight } = useVirtualRows(data, ROW_HEIGHT, containerHeight);
 
   const renderRow = (s: typeof data[0], i: number) => {
     const team = getTeamById(s.teamId);
     if (!team) return null;
-    const qualified = i < 2;
+    const qualified = i < teamsAdvance;
     return (
       <div
         key={s.teamId}
@@ -80,11 +77,16 @@ function FullGroupTable({ group }: { group: string }) {
 
   return (
     <div className="bg-card border border-border rounded-2xl overflow-hidden card-glow">
-      <div className="flex items-center gap-3 px-6 py-4 border-b border-border bg-primary/40">
-        <span className="w-9 h-9 rounded-xl bg-accent/15 flex items-center justify-center text-accent text-[13px] font-black border border-accent/20">
-          {group}
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-primary/40">
+        <div className="flex items-center gap-3">
+          <span className="w-9 h-9 rounded-xl bg-accent/15 flex items-center justify-center text-accent text-[13px] font-black border border-accent/20">
+            {group}
+          </span>
+          <span className="text-[12px] font-black uppercase tracking-widest text-foreground">Grup {group}</span>
+        </div>
+        <span className="text-[10px] font-black uppercase tracking-widest text-accent/70">
+          Top {teamsAdvance} Lolos ↑
         </span>
-        <span className="text-[12px] font-black uppercase tracking-widest text-foreground">Grup {group}</span>
       </div>
 
       {/* Table Header */}
@@ -100,7 +102,6 @@ function FullGroupTable({ group }: { group: string }) {
         <span className="text-[10px] font-black uppercase tracking-widest text-accent/70 text-right font-black">Pts</span>
       </div>
 
-      {/* Virtualized rows for large datasets, direct render for small */}
       {shouldVirtualize ? (
         <div
           ref={scrollRef}
@@ -128,6 +129,25 @@ function FullGroupTable({ group }: { group: string }) {
 
 export default function GroupTable() {
   const [activeGroup, setActiveGroup] = useState<string>('all');
+  const [groups, setGroups] = useState<string[]>(['A', 'B', 'C', 'D']);
+  const [teamsAdvance, setTeamsAdvance] = useState<number>(2);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setGroups(cfg.groupNames);
+    setTeamsAdvance(cfg.teamsAdvancePerGroup);
+
+    // Re-read config when storage changes (e.g. admin saves in another tab)
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'admin_league_config') {
+        const updated = getLeagueGroupConfig();
+        setGroups(updated.groupNames);
+        setTeamsAdvance(updated.teamsAdvancePerGroup);
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   return (
     <div className="space-y-8">
@@ -158,11 +178,11 @@ export default function GroupTable() {
       {activeGroup === 'all' ? (
         <div className="grid md:grid-cols-2 gap-6">
           {groups.map((g) => (
-            <FullGroupTable key={g} group={g} />
+            <FullGroupTable key={g} group={g} teamsAdvance={teamsAdvance} />
           ))}
         </div>
       ) : (
-        <FullGroupTable group={activeGroup} />
+        <FullGroupTable group={activeGroup} teamsAdvance={teamsAdvance} />
       )}
     </div>
   );

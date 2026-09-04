@@ -1987,7 +1987,10 @@ export default function AdminPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-400 mb-1.5">Tim Lolos per Grup</label>
+                  <label className="block text-xs font-medium text-gray-400 mb-1.5">
+                    Tim Lolos per Grup
+                    <span className="ml-1.5 text-blue-400 text-[10px] font-semibold">(↔ klasemen)</span>
+                  </label>
                   <input
                     type="number"
                     min="1"
@@ -2064,6 +2067,17 @@ export default function AdminPage() {
                   ))}
                 </div>
               )}
+              {/* Live impact notice */}
+              <div className="mt-4 flex items-start gap-2.5 bg-blue-500/5 border border-blue-500/20 rounded-lg px-4 py-3">
+                <svg className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-xs text-blue-300 leading-relaxed">
+                  <span className="font-semibold">Sinkron otomatis:</span> Setelah disimpan, jumlah grup, nama grup, dan jumlah tim lolos per grup akan langsung tercermin di{' '}
+                  <span className="font-semibold">tabel klasemen beranda</span> dan{' '}
+                  <span className="font-semibold">halaman klasemen</span> — termasuk sorotan tim yang lolos.
+                </p>
+              </div>
             </div>
 
             {/* Section 4: Regulasi Pertandingan */}
