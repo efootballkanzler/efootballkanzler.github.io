@@ -16,6 +16,8 @@ const DEFAULT_CONFIG: LeagueGroupConfig = {
   totalTeams: 16,
 };
 
+export const LEAGUE_CONFIG_EVENT = 'league_config_updated';
+
 /**
  * Reads group structure config from localStorage (set by admin panel).
  * Falls back to defaults if not set or invalid.
@@ -47,6 +49,16 @@ export function getLeagueGroupConfig(): LeagueGroupConfig {
     };
   } catch {
     return DEFAULT_CONFIG;
+  }
+}
+
+/**
+ * Dispatches a custom event so same-tab components can react immediately
+ * when admin saves config. Call this after writing to localStorage.
+ */
+export function dispatchLeagueConfigUpdate(): void {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(LEAGUE_CONFIG_EVENT));
   }
 }
 

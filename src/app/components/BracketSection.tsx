@@ -1,6 +1,8 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { matches, getTeamById } from '@/data/leagueData';
+import { getLeagueGroupConfig, LEAGUE_CONFIG_EVENT } from '@/lib/leagueConfig';
 
 function BracketMatch({ matchId }: { matchId: string }) {
   const match = matches.find((m) => m.id === matchId);
@@ -54,6 +56,27 @@ function BracketMatch({ matchId }: { matchId: string }) {
 
 export default function BracketSection() {
   const r16Matches = matches.filter((m) => m.stage === 'r16');
+  const [totalTeams, setTotalTeams] = useState(16);
+
+  useEffect(() => {
+    const cfg = getLeagueGroupConfig();
+    setTotalTeams(cfg.totalTeams);
+
+    const refresh = () => {
+      const updated = getLeagueGroupConfig();
+      setTotalTeams(updated.totalTeams);
+    };
+
+    window.addEventListener(LEAGUE_CONFIG_EVENT, refresh);
+    const onStorage = (e: StorageEvent) => {
+      if (e.key === 'admin_league_config') refresh();
+    };
+    window.addEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener(LEAGUE_CONFIG_EVENT, refresh);
+      window.removeEventListener('storage', onStorage);
+    };
+  }, []);
 
   return (
     <section className="py-24 relative overflow-hidden">
@@ -71,7 +94,7 @@ export default function BracketSection() {
           </div>
           <div className="space-y-3">
             <p className="text-muted-foreground text-base leading-relaxed max-w-xs">
-              Babak gugur dimulai. 16 tim terbaik bertarung menuju puncak.
+              Babak gugur dimulai. {totalTeams} tim terbaik bertarung menuju puncak.
             </p>
             <Link
               href="/schedule"

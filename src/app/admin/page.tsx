@@ -6,6 +6,7 @@ import {
 } from 'recharts';
 
 import { teams as initialTeams, matches as initialMatches, standings as initialStandings, Team, Match } from '@/data/leagueData';
+import { dispatchLeagueConfigUpdate } from '@/lib/leagueConfig';
 
 const GROUPS = ['A', 'B', 'C', 'D'];
 
@@ -218,6 +219,7 @@ export default function AdminPage() {
   function handleConfigSave(e: React.FormEvent) {
     e.preventDefault();
     localStorage.setItem('admin_league_config', JSON.stringify(leagueConfig));
+    dispatchLeagueConfigUpdate();
     setConfigSaved(true);
     setConfigDirty(false);
     setTimeout(() => setConfigSaved(false), 2500);
@@ -226,6 +228,7 @@ export default function AdminPage() {
   function handleConfigReset() {
     setLeagueConfig(defaultConfig);
     localStorage.removeItem('admin_league_config');
+    dispatchLeagueConfigUpdate();
     setConfigDirty(false);
     setConfigSaved(true);
     setTimeout(() => setConfigSaved(false), 2500);

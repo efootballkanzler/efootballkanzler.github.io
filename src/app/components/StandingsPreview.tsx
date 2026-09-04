@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { standings, getTeamById } from '@/data/leagueData';
-import { getLeagueGroupConfig } from '@/lib/leagueConfig';
+import { getLeagueGroupConfig, LEAGUE_CONFIG_EVENT } from '@/lib/leagueConfig';
 
 function GroupMiniTable({ group, label, teamsAdvance }: { group: string; label: string; teamsAdvance: number }) {
   const groupStandings = standings[group] ?? [];
@@ -71,15 +71,23 @@ export default function StandingsPreview() {
     setGroups(cfg.groupNames);
     setTeamsAdvance(cfg.teamsAdvancePerGroup);
 
+    const refresh = () => {
+      const updated = getLeagueGroupConfig();
+      setGroups(updated.groupNames);
+      setTeamsAdvance(updated.teamsAdvancePerGroup);
+    };
+
+    // same-tab updates (admin panel in same browser tab)
+    window.addEventListener(LEAGUE_CONFIG_EVENT, refresh);
+    // cross-tab updates
     const onStorage = (e: StorageEvent) => {
-      if (e.key === 'admin_league_config') {
-        const updated = getLeagueGroupConfig();
-        setGroups(updated.groupNames);
-        setTeamsAdvance(updated.teamsAdvancePerGroup);
-      }
+      if (e.key === 'admin_league_config') refresh();
     };
     window.addEventListener('storage', onStorage);
-    return () => window.removeEventListener('storage', onStorage);
+    return () => {
+      window.removeEventListener(LEAGUE_CONFIG_EVENT, refresh);
+      window.removeEventListener('storage', onStorage);
+    };
   }, []);
 
   // Determine grid columns class based on number of groups
